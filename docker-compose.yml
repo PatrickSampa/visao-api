@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    container_name: visao
+    restart: always
+    build: .
+    ports:
+      - ${PORT_DOCKER}:${PORT}
+    volumes:
+      - .:/user/src/app
+      - /user/src/app/node_modules

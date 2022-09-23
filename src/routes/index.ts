@@ -2,11 +2,12 @@ import express from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Options } from '../config/swagger';
+import { routerAuth } from './teste.routes';
 
 
 export const routes = express();
 
-
+routes.use("/", routerAuth);
 
 
 

@@ -30,7 +30,7 @@ type Coockie = {
 
 routerAuth.get("/teste", async (req, res) => {
     let csrf_token: string;
-    let login: any;
+    let login12: any;
     await Sapiens.get(url + "login").then(async (resposta) => {
         csrf_token = await resposta.data.split("\n").at(-3).split("value=").at(1).split('"').at(1);
     }).catch(err => {
@@ -47,78 +47,111 @@ routerAuth.get("/teste", async (req, res) => {
     let headrs;
     let PHPSESSID: string;
     let dtCookie: string;
-    let cookieVerdadeiro: Coockie;
     let checkLogin: Coockie;
-    request.post(url + "login_check", body, async function (error, response, body) {
+    /*request.post(url + "login_check", body, async function (error, response, body) {
         console.log('statusCode:', response && response.statusCode);
-        console.log('statusCode:', response && response.Cookies);
-        /*console.error('error:', error);
+        //console.log('statusCode:', response && response.Cookies);
+        console.error('error:', error);
         
         console.log('headrs em fuction:', response && response.headers);
-*/
+
         headrs = response.headers;
         let { "set-cookie": any } = await headrs;
         let cookieHeards = await { "set-cookie": any };
         let setCoockieHeadrs: setCoockieHeadrs = await cookieHeards,
             cookie = setCoockieHeadrs["set-cookie"],
             cookies: Coockie = {
-                PHPSESSID: cookie[0],
+                pHPSESSID: cookie[0],
                 dtCookie: cookie[1]
             }
         cookieVerdadeiro = await cookies;
-       // await console.log(await cookieVerdadeiro);
-       
-    });
+        await console.log(await cookieVerdadeiro.pHPSESSID);
+
+    });*/
+    let cookieVerdadeiro = await login(url + "login_check", body);
     var cookieText = 'dtCookie=' + csrf_token;
     var cookieText1 = 'dtLatC=26';
     var cookieText2 = '';
-    console.log("PHPSESSID: " + PHPSESSID);
+    console.log("PHPSESSID: " + cookieVerdadeiro.PHPSESSID);
     console.log("Coockie: " + cookieVerdadeiro);
     //console.log(request.cookie(cookieText1));
     //console.log(request.cookie(cookieText2));
 
 
-    if (checkLogin) {
-        let body2 = {
-            "action": "SapiensMain_Usuario",
-            "method": "getUsuario",
-            "data": [
-                {
-                    "sessao": true,
-                    "fetch": [
-                        "colaborador",
-                        "colaborador.modalidadeColaborador",
-                        "colaborador.lotacoes",
-                        "colaborador.lotacoes.setor",
-                        "colaborador.lotacoes.setor.especieSetor",
-                        "colaborador.lotacoes.setor.unidade",
-                        "colaborador.lotacoes.setor.unidade.modalidadeOrgaoCentral",
-                        "colaborador.lotacoes.setor.unidade.generoSetor"
-                    ],
-                    "filter": [
-                        {
-                            "property": "colaborador.lotacoes.id",
-                            "value": "isNotNull"
-                        },
-                        {
-                            "property": "colaborador.lotacoes.setor.ativo",
-                            "value": "eq:1"
-                        }
-                    ],
-                    "page": 1,
-                    "start": 0,
-                    "limit": 25
-                }
-            ],
-            "type": "rpc",
-            "tid": 1
+    let body2 = {
+        "action": "SapiensMain_Usuario",
+        "method": "getUsuario",
+        "data": [
+            {
+                "sessao": true,
+                "fetch": [
+                    "colaborador",
+                    "colaborador.modalidadeColaborador",
+                    "colaborador.lotacoes",
+                    "colaborador.lotacoes.setor",
+                    "colaborador.lotacoes.setor.especieSetor",
+                    "colaborador.lotacoes.setor.unidade",
+                    "colaborador.lotacoes.setor.unidade.modalidadeOrgaoCentral",
+                    "colaborador.lotacoes.setor.unidade.generoSetor"
+                ],
+                "filter": [
+                    {
+                        "property": "colaborador.lotacoes.id",
+                        "value": "isNotNull"
+                    },
+                    {
+                        "property": "colaborador.lotacoes.setor.ativo",
+                        "value": "eq:1"
+                    }
+                ],
+                "page": 1,
+                "start": 0,
+                "limit": 25
+            }
+        ],
+        "type": "rpc",
+        "tid": 1
+    }
+    await Sapiens.post("route", {
+        data: body2, headers: {
+            Cookie: [cookieVerdadeiro.dtCookie, cookieVerdadeiro.PHPSESSID]
         }
-        await Sapiens.post("route", body2).then(response => {
-            let test = { response: response.data, message: "aqui" }
-            res.status(201).send("OK")
-        }).catch(err => {
-            console.log(err.message)
-            res.status(400).send({ error: err.message });
-        })
+    }).then(response => {
+        let test = { response: response.data, message: "aqui" }
+        //console.log(response);
+        res.status(200).send(response.data)
+    }).catch(err => {
+        console.log(err.message)
+        res.status(400).send({ error: err.message });
+    })
+
+    function login(url:string, body): Promise<Coockie> {
+        return new Promise(function (resolve, reject) {
+            request.post(url, body, async function (error, response, body) {
+                if (!error && response.statusCode === 302) {
+                    console.log('statusCode:', response && response.statusCode);
+                    //console.log('statusCode:', response && response.Cookies);
+                    /*console.error('error:', error);
+                    
+                    console.log('headrs em fuction:', response && response.headers);
+            */
+                    let headrs = response.headers;
+                    let { "set-cookie": any } = await headrs;
+                    let cookieHeards = await { "set-cookie": any };
+                    let setCoockieHeadrs: setCoockieHeadrs = await cookieHeards,
+                        cookie = setCoockieHeadrs["set-cookie"],
+                        cookies: Coockie = {
+                            PHPSESSID: cookie[0],
+                            dtCookie: cookie[1]
+                        }
+                    console.log(cookies)
+                    resolve(cookies);
+                } else {
+                    reject(error);
+                }
+            });
+        });
     }
 })
+
+

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { type } from "os";
 import { Sapiens } from "../config/Axios";
 const { parse, stringify } = require('flatted');
 const request = require('request');
@@ -19,6 +20,14 @@ export const routerAuth = Router();
  *       200:
  *         description: The list of the Category
  */
+type setCoockieHeadrs = {
+    "set-cookie": []
+}
+type Coockie = {
+    PHPSESSID: string,
+    dtCookie: string
+}
+
 routerAuth.get("/teste", async (req, res) => {
     let csrf_token: string;
     let login: any;
@@ -33,22 +42,41 @@ routerAuth.get("/teste", async (req, res) => {
         _password: "Senhasenh4",
         _submit: "Login"
     }
-//
+    //
 
-    const checkLogin = await request.post(url + "login_check", body, function (error, response, body, headers, cookies, cookie) {
-        console.error('error:', error); // Print the error if one occurred
-        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        //console.log('body:', body); // Print the HTML for the Google homepage.
-        console.log('cookie:', cookie); // Print the HTML for the Google homepage.
-        console.log('cookies:', cookies); // Print the HTML for the Google homepage.
-        console.log('headers:', headers); // Print the HTML for the Google homepage.
-      });
+    let headrs;
+    let PHPSESSID: string;
+    let dtCookie: string;
+    let cookieVerdadeiro: Coockie;
+    let checkLogin: Coockie;
+    request.post(url + "login_check", body, async function (error, response, body) {
+        console.log('statusCode:', response && response.statusCode);
+        console.log('statusCode:', response && response.Cookies);
+        /*console.error('error:', error);
+        
+        console.log('headrs em fuction:', response && response.headers);
+*/
+        headrs = response.headers;
+        let { "set-cookie": any } = await headrs;
+        let cookieHeards = await { "set-cookie": any };
+        let setCoockieHeadrs: setCoockieHeadrs = await cookieHeards,
+            cookie = setCoockieHeadrs["set-cookie"],
+            cookies: Coockie = {
+                PHPSESSID: cookie[0],
+                dtCookie: cookie[1]
+            }
+        cookieVerdadeiro = await cookies;
+       // await console.log(await cookieVerdadeiro);
+       
+    });
     var cookieText = 'dtCookie=' + csrf_token;
     var cookieText1 = 'dtLatC=26';
     var cookieText2 = '';
-    console.log(request.jar());
-    console.log(request.cookie(cookieText1));
-    console.log(request.cookie(cookieText2));
+    console.log("PHPSESSID: " + PHPSESSID);
+    console.log("Coockie: " + cookieVerdadeiro);
+    //console.log(request.cookie(cookieText1));
+    //console.log(request.cookie(cookieText2));
+
 
     if (checkLogin) {
         let body2 = {
@@ -87,7 +115,7 @@ routerAuth.get("/teste", async (req, res) => {
         }
         await Sapiens.post("route", body2).then(response => {
             let test = { response: response.data, message: "aqui" }
-            res.status(200).send(response.data)
+            res.status(201).send("OK")
         }).catch(err => {
             console.log(err.message)
             res.status(400).send({ error: err.message });

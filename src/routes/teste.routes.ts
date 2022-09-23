@@ -66,7 +66,7 @@ routerAuth.get("/teste", async (req, res) => {
                 dtCookie: cookie[1]
             }
         cookieVerdadeiro = await cookies;
-       // await console.log(await cookieVerdadeiro);
+       // await console.log(await cookieVerdadeiro);/
     });
     var cookieText = 'dtCookie=' + csrf_token;
     var cookieText1 = 'dtLatC=26';

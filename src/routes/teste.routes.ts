@@ -1,9 +1,12 @@
 import { Router } from "express";
 import { type } from "os";
 import { Sapiens } from "../config/Axios";
+import bodyParser from 'body-parser';
+import { getUsuario, login } from '../helps/getUsuario';
 const { parse, stringify } = require('flatted');
 const request = require('request');
 const url = "https://sapiens.agu.gov.br/"
+const urlRoute = "https://sapiens.agu.gov.br/route"
 //const sessao = request.session();
 
 export const routerAuth = Router();
@@ -48,110 +51,53 @@ routerAuth.get("/teste", async (req, res) => {
     let PHPSESSID: string;
     let dtCookie: string;
     let checkLogin: Coockie;
-    /*request.post(url + "login_check", body, async function (error, response, body) {
-        console.log('statusCode:', response && response.statusCode);
-        //console.log('statusCode:', response && response.Cookies);
-        console.error('error:', error);
-        
-        console.log('headrs em fuction:', response && response.headers);
 
-        headrs = response.headers;
-        let { "set-cookie": any } = await headrs;
-        let cookieHeards = await { "set-cookie": any };
-        let setCoockieHeadrs: setCoockieHeadrs = await cookieHeards,
-            cookie = setCoockieHeadrs["set-cookie"],
-            cookies: Coockie = {
-                pHPSESSID: cookie[0],
-                dtCookie: cookie[1]
-            }
-        cookieVerdadeiro = await cookies;
-        await console.log(await cookieVerdadeiro.pHPSESSID);
-
-    });*/
     let cookieVerdadeiro = await login(url + "login_check", body);
     var cookieText = 'dtCookie=' + csrf_token;
     var cookieText1 = 'dtLatC=26';
     var cookieText2 = '';
-    console.log("PHPSESSID: " + cookieVerdadeiro.PHPSESSID);
-    console.log("Coockie: " + cookieVerdadeiro);
-    //console.log(request.cookie(cookieText1));
-    //console.log(request.cookie(cookieText2));
 
 
     let body2 = {
         "action": "SapiensMain_Usuario",
         "method": "getUsuario",
-        "data": [
+        "data": [{
+            "sessao": "True",
+            "fetch": ["colaborador",
+                "colaborador.modalidadeColaborador",
+                "colaborador.lotacoes",
+                "colaborador.lotacoes.setor",
+                "colaborador.lotacoes.setor.especieSetor",
+                "colaborador.lotacoes.setor.unidade",
+                "colaborador.lotacoes.setor.unidade.modalidadeOrgaoCentral",
+                "colaborador.lotacoes.setor.unidade.generoSetor"],
+            "filter": [{
+                "property": "colaborador.lotacoes.id",
+                "value": "isNotNull"
+            },
             {
-                "sessao": true,
-                "fetch": [
-                    "colaborador",
-                    "colaborador.modalidadeColaborador",
-                    "colaborador.lotacoes",
-                    "colaborador.lotacoes.setor",
-                    "colaborador.lotacoes.setor.especieSetor",
-                    "colaborador.lotacoes.setor.unidade",
-                    "colaborador.lotacoes.setor.unidade.modalidadeOrgaoCentral",
-                    "colaborador.lotacoes.setor.unidade.generoSetor"
-                ],
-                "filter": [
-                    {
-                        "property": "colaborador.lotacoes.id",
-                        "value": "isNotNull"
-                    },
-                    {
-                        "property": "colaborador.lotacoes.setor.ativo",
-                        "value": "eq:1"
-                    }
-                ],
-                "page": 1,
-                "start": 0,
-                "limit": 25
-            }
-        ],
+                "property": "colaborador.lotacoes.setor.ativo",
+                "value": "eq:1"
+            }],
+            "page": 1,
+            "start": 0,
+            "limit": 25
+        }],
         "type": "rpc",
-        "tid": 1
+        "tid": 0
     }
-    await Sapiens.post("route", {
-        data: body2, headers: {
-            Cookie: [cookieVerdadeiro.dtCookie, cookieVerdadeiro.PHPSESSID]
-        }
-    }).then(response => {
-        let test = { response: response.data, message: "aqui" }
-        //console.log(response);
-        res.status(200).send(response.data)
-    }).catch(err => {
-        console.log(err.message)
-        res.status(400).send({ error: err.message });
-    })
+    let bodyParser = await JSON.parse(JSON.stringify(body2));
+    //console.log(`${cookieVerdadeiro.dtCookie}; ${cookieVerdadeiro.PHPSESSID}`);
+    const coockeiSapiens = await JSON.parse(JSON.stringify({
+        'Cookie': cookieVerdadeiro.PHPSESSID,
+    }));
+    let superCookie = { 'Cookie': cookieVerdadeiro.PHPSESSID }
+    try {
+        res.status(200).send(await getUsuario(urlRoute, body2, superCookie));
+    } catch (error) {
+        res.status(400).send({ errors: error });
+    }
 
-    function login(url:string, body): Promise<Coockie> {
-        return new Promise(function (resolve, reject) {
-            request.post(url, body, async function (error, response, body) {
-                if (!error && response.statusCode === 302) {
-                    console.log('statusCode:', response && response.statusCode);
-                    //console.log('statusCode:', response && response.Cookies);
-                    /*console.error('error:', error);
-                    
-                    console.log('headrs em fuction:', response && response.headers);
-            */
-                    let headrs = response.headers;
-                    let { "set-cookie": any } = await headrs;
-                    let cookieHeards = await { "set-cookie": any };
-                    let setCoockieHeadrs: setCoockieHeadrs = await cookieHeards,
-                        cookie = setCoockieHeadrs["set-cookie"],
-                        cookies: Coockie = {
-                            PHPSESSID: cookie[0],
-                            dtCookie: cookie[1]
-                        }
-                    console.log(cookies)
-                    resolve(cookies);
-                } else {
-                    reject(error);
-                }
-            });
-        });
-    }
 })
 
 

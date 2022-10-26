@@ -14,8 +14,6 @@ export function getUsuario(url: string, data, headers: object): Promise<Object> 
             url, data, headers
         }, async function (error, response, body) {
             //console.log(response);
-            console.log(response.headers);
-            console.log(error);
             if (!error && response.statusCode === 200) {
                 resolve(body);
             } else {

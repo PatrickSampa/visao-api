@@ -3,6 +3,7 @@ import { type } from "os";
 import { Sapiens } from "../config/Axios";
 import bodyParser from 'body-parser';
 import { getUsuario, login } from '../helps/getUsuario';
+import {ChildPython} from '../helps/requestPython';
 const { parse, stringify } = require('flatted');
 const request = require('request');
 const url = "https://sapiens.agu.gov.br/"
@@ -93,7 +94,8 @@ routerAuth.get("/teste", async (req, res) => {
     }));
     let superCookie = { 'Cookie': cookieVerdadeiro.PHPSESSID }
     try {
-        res.status(200).send(await getUsuario(urlRoute, body2, superCookie));
+        await getUsuario(urlRoute, body2, superCookie)
+        res.status(200).send(await ChildPython());
     } catch (error) {
         res.status(400).send({ errors: error });
     }

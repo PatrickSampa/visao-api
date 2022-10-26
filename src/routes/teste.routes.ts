@@ -3,7 +3,7 @@ import { type } from "os";
 import { Sapiens } from "../config/Axios";
 import bodyParser from 'body-parser';
 import { getUsuario, login } from '../helps/getUsuario';
-import {ChildPython} from '../helps/requestPython';
+import { ChildPython } from '../pytonRequest';
 const { parse, stringify } = require('flatted');
 const request = require('request');
 const url = "https://sapiens.agu.gov.br/"

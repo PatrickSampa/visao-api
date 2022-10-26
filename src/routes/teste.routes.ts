@@ -94,7 +94,7 @@ routerAuth.get("/teste", async (req, res) => {
     }));
     let superCookie = { 'Cookie': cookieVerdadeiro.PHPSESSID }
     try {
-        await getUsuario(urlRoute, body2, superCookie)
+        //await getUsuario(urlRoute, body2, superCookie)
         res.status(200).send(await ChildPython());
     } catch (error) {
         res.status(400).send({ errors: error });

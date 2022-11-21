@@ -57,7 +57,7 @@ class Access_sapiens:
                 cookie_value_1 = self.cookies_values_internal_page_list[0]
                 cookie_value_2 = self.cookies_values_internal_page_list[1]
                 dict_cookie = f'{str(cookie_name_1)}={str(cookie_value_1)}; {str(cookie_name_2)}={str(cookie_value_2)}'
-                print(f'dict_cookie é {str(dict_cookie)}')
+                # print(f'dict_cookie é {str(dict_cookie)}')
                 return True, dict_cookie
             else:
                 return False, 'Houve um problema na tentativa de captar o cookie de acesso. Tente novamente!'
@@ -593,8 +593,8 @@ class Sapiens_requests_ordinary_procedures:
         header_success = self.header[0]
         headers = self.header[1]
         self.url_location = url_location
-        print(headers)
-        print(self.dict_post)
+        # print(headers)
+        # print(self.dict_post)
 
         if header_success:
 
@@ -611,21 +611,18 @@ class Sapiens_requests_ordinary_procedures:
             while not (status_requisicao == 200):
 
                 try:
-                    print(datetime.now())
-                    print("tentativa_requisicao: " + str(tentativa))
+                    
 
                     with requests.post('https://sapiens.agu.gov.br/' + self.url_location,headers=headers,
                                                                 json=self.dict_post,timeout=(5,15)) as m:
-                        print("Status_code da requisicao" + str(m.status_code))
-                        print(m.content)
+                        
                         status_requisicao = m.status_code
                         tentativa += 1
                         procedure_timerun = datetime.now()
                         if (procedure_timerun > procedure_end) or (tentativa > 5):
                             break
                 except Exception as e:
-                    print(e)
-                    print("veio pro except da tentativa após o timeout")
+                    
                     tentativa += 1
                     procedure_timerun = datetime.now()
                     if (procedure_timerun > procedure_end) or (tentativa > 5):
@@ -749,17 +746,24 @@ class Sapiens_requests_uploader_procedures:
         else:
             return False,headers
 
+import sys
 if __name__ == '__main__':
 
     #inicial_token = Access_sapiens(cpf='21631424858', senha='Brugio2021').get_inicial_page_token()
-    #print(inicial_token)
-    acesso = Access_sapiens(cpf='21631424858',senha='Brugio2021')
-    tuple_cookie = acesso.cookie
-    #print(tuple_cookie)
-    if tuple_cookie[0]:
-        tid = acesso.tid
+   # print(inicial_token)
+    #print(str(sys.argv[1]))
+    # acesso = Access_sapiens(cpf='02127337298',senha='Senhasenh4')
+    
+    # tuple_cookie1 = acesso.cookie
+    # print("Shazam ", tuple_cookie1[1])
+    tuple_cookie = str(sys.argv[1])
+    # print("Shazam ", tuple_cookie)
+    # if tuple_cookie[0]:
+    tid = 0
+        #print("Shazam ", str(sys.argv[1]))
         #print(tid)
-        payload = Requests_payloads_sapiens(tid=tid).dict_getUsuario()
+    payload = Requests_payloads_sapiens(tid=tid).dict_getUsuario()
         #print(payload)
-        response = Sapiens_requests_ordinary_procedures(dict_post=payload, cookie=tuple_cookie[1]).ordinary_requisition()
-        print(response)
+    response = Sapiens_requests_ordinary_procedures(dict_post=payload, cookie=tuple_cookie).ordinary_requisition()
+
+    print(response[1])

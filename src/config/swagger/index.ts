@@ -39,5 +39,5 @@ export const swaggerDefinition = {
   export const Options = {
     swaggerDefinition,
     // Paths to files containing OpenAPI definitions
-    apis: ['./src/routes/*.ts', './src/entities/*.ts'],
+    apis: ['./src/routes/*.ts', './src/entities/*.ts', './src/modules/*/*.ts', './src/type/*.ts'],
 };

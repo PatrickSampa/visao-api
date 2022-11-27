@@ -3,8 +3,6 @@ import { ILoginDTO } from '../../DTO/LoginDTO'
 
 export function LoginSapiens(login: ILoginDTO): Promise<string> {
     const { spawn } = require('child_process');
-    console.log(login);
-
     // const childPython = spawn("python", ["--version"])
     const childPython = spawn("python", ["./src/pytonRequest/loginSapiens/loginPython.py", login.cpf, login.senha])
     let dataPython;

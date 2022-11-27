@@ -1,5 +1,9 @@
 export class RequestGetTarefa {
-    async execute(idUsuario: string): Promise<string> {
+    async execute(idUsuario: string, etiqueta?: string): Promise<string> {
+        if(!(etiqueta == null || etiqueta == "")){
+            etiqueta = `"gridfilter":[{"type":"string","value":"${etiqueta}","field":"postIt"}],`;
+            console.log(etiqueta)
+        }
         const getTarefa = `{
             "action": "SapiensAdministrativo_Tarefa",
             "method": "getTarefa",
@@ -47,6 +51,7 @@ export class RequestGetTarefa {
                             "value": "isNull"
                         }
                     ],
+                    ${etiqueta}
                     "page": 1,
                     "start": 0,
                     "limit": 50

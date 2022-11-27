@@ -4,10 +4,10 @@ import { GetTarefaUseCase } from './GetTarefaUseCase';
 export class GetTarefaController {
     constructor(private GetUsuarioUseCase: GetTarefaUseCase,) { }
     async handle(request: Request, response: Response): Promise<Response> {
-        const { Coockie } = request.body;
+        const { Coockie, etiqueta } = request.body;
         const {idUsuario} = request.params;
         try {
-            const cookie = await this.GetUsuarioUseCase.execute(Coockie, idUsuario);
+            const cookie = await this.GetUsuarioUseCase.execute(Coockie, idUsuario, etiqueta);
             response.status(200).json(cookie);
         } catch (error) {
             return response.status(400).json({

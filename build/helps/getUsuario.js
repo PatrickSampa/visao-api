@@ -1,32 +1,26 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.login = void 0;
 const request = require('request');
-
-type Coockie = {
-    PHPSESSID: string,
-    dtCookie: string
-}
-type setCoockieHeadrs = {
-    "set-cookie": []
-}
-
-export function login(url: string, body): Promise<Coockie> {
+function login(url, body) {
     return new Promise(function (resolve, reject) {
         request.post(url, body, async function (error, response, body) {
             if (!error && response.statusCode === 302) {
                 let headrs = response.headers;
                 let { "set-cookie": any } = await headrs;
                 let cookieHeards = await { "set-cookie": any };
-                let setCoockieHeadrs: setCoockieHeadrs = await cookieHeards,
-                    cookie: Array<string> = setCoockieHeadrs["set-cookie"];
-                //console.log(cookie);
-                let cookies: Coockie = {
+                let setCoockieHeadrs = await cookieHeards, cookie = setCoockieHeadrs["set-cookie"];
+                let cookies = {
                     PHPSESSID: cookie[0].split(';')[0].replace(":", "="),
                     dtCookie: ""
-                }
-                //console.log(cookies)
+                };
                 resolve(cookies);
-            } else {
+            }
+            else {
                 reject(error);
             }
         });
     });
 }
+exports.login = login;
+//# sourceMappingURL=getUsuario.js.map

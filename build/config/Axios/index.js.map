@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/config/Axios/index.ts"],"names":[],"mappings":";;;;;;AAAA,kDAA0B;AAC1B,oDAA4B;AAE5B,gBAAM,CAAC,MAAM,EAAE,CAAC;AAChB,MAAM,WAAW,GAAO,OAAO,CAAC,GAAG,CAAC,WAAW,CAAC;AAEnC,QAAA,OAAO,GAAG,eAAK,CAAC,MAAM,CAAC;IAChC,OAAO,EAAE,WAAW;CACvB,CAAC,CAAC"}

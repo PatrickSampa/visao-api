@@ -1,5 +1,5 @@
 import { Coockie } from '../../type/Cookie'
-import { ILoginDTO } from '../../modules/LoginUsuario/LoginDTO'
+import { ILoginDTO } from '../../DTO/LoginDTO'
 
 export function LoginSapiens(login: ILoginDTO): Promise<string> {
     const { spawn } = require('child_process');

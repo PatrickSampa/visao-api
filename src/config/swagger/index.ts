@@ -21,7 +21,7 @@ export const swaggerDefinition = {
       },
       contact: {
         name: 'GITHUB PROJECT',
-        url: 'https://jsonplaceholder.typicode.com',
+        url: 'https://github.com/moisesPompilio/visao-api.git',
       },
     },
     servers: [
@@ -39,5 +39,5 @@ export const swaggerDefinition = {
   export const Options = {
     swaggerDefinition,
     // Paths to files containing OpenAPI definitions
-    apis: ['./src/routes/*.ts', './src/entities/*.ts', './src/modules/*/*.ts', './src/type/*.ts'],
+    apis: ['./src/routes/*.ts', './src/entities/*.ts', './src/modules/*/*.ts', './src/type/*.ts', './src/DTO/*.ts'],
 };

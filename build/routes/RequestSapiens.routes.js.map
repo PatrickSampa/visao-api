@@ -1,0 +1,1 @@
+{"version":3,"file":"RequestSapiens.routes.js","sourceRoot":"","sources":["../../src/routes/RequestSapiens.routes.ts"],"names":[],"mappings":";;;AAAA,qCAAiC;AACjC,sFAA6F;AAIhF,QAAA,UAAU,GAAG,IAAA,gBAAM,GAAE,CAAC;AA6BnC,kBAAU,CAAC,IAAI,CAAC,QAAQ,EAAE,KAAK,EAAE,GAAG,EAAE,GAAG,EAAE,EAAE;IACzC,OAAO,iEAAoC,CAAC,MAAM,CAAC,GAAG,EAAE,GAAG,CAAC,CAAC;AACjE,CAAC,CAAC,CAAA"}

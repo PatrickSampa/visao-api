@@ -749,21 +749,13 @@ class Sapiens_requests_uploader_procedures:
 import sys
 if __name__ == '__main__':
 
-    #inicial_token = Access_sapiens(cpf='21631424858', senha='Brugio2021').get_inicial_page_token()
-   # print(inicial_token)
-    #print(str(sys.argv[1]))
-    # acesso = Access_sapiens(cpf='02127337298',senha='Senhasenh4')
     
-    # tuple_cookie1 = acesso.cookie
-    # print("Shazam ", tuple_cookie1[1])
     tuple_cookie = str(sys.argv[1])
-    # print("Shazam ", tuple_cookie)
-    # if tuple_cookie[0]:
+
     tid = 0
-        #print("Shazam ", str(sys.argv[1]))
-        #print(tid)
-    payload = Requests_payloads_sapiens(tid=tid).dict_getUsuario()
-        #print(payload)
+
+    payload = sys.argv[2]
+    
     response = Sapiens_requests_ordinary_procedures(dict_post=payload, cookie=tuple_cookie).ordinary_requisition()
 
-    print(response[1])
+    print(str(response[1]))

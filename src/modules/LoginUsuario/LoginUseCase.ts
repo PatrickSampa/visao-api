@@ -1,4 +1,4 @@
-import { ILoginDTO } from './LoginDTO'
+import { ILoginDTO } from '../../DTO/LoginDTO'
 import {LoginSapiens} from '../../pytonRequest/loginSapiens'
 
 export class LoginUseCase {

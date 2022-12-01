@@ -20,12 +20,12 @@ export function RequestSapiens(coockie: string, operation:string): Promise<any> 
             // console.log(aspaSimples[1]);
             // console.log(aspaSimples.length);
             const preparingForJSON = new PreparingForJSON();
-            
+            // console.log(`${data}`)
             try {
                 // console.log("data string Leng",data.length)
                 if (data.length > 2) {
                     let jsonFuncionou = JSON.parse(await preparingForJSON.execute(data))
-                    console.log(jsonFuncionou[0].result.records.length)
+                    //console.log(jsonFuncionou[0].result.records.length)
                     dataPythonResponse.push(jsonFuncionou[0].result.records);
                 }
 

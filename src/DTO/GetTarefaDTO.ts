@@ -1,5 +1,7 @@
 export interface IGetTarefaDTO {
-    idUsuario: string;
+    usuario_id: string;
+    cookie: string;
+    etiqueta?: string;
 }
 /**
  * @swagger
@@ -8,11 +10,20 @@ export interface IGetTarefaDTO {
  *     GetTarefa:
  *       type: object
  *       required:
- *         - idUsuario
+ *         - usuario_id
+ *         - cookie
  *       properties:
- *         idUsuario:
+ *         usuario_id:
  *           type: string
- *           description: idUsuario do usuario sapiens
+ *           description: usuario_id do usuario sapiens
+ *         cookie:
+ *           type: string
+ *           description: Cookie do usuario sapiens para atetição
+ *         etiqueta:
+ *           type: string
+ *           description: etiqueta para pesquisar
  *       example:
- *         idUsuario: 3802191
+ *         usuario_id: 3802191
+ *         cookie: dcxscvssSDEBCq
+ *         etiqueta: lido boot
  * */

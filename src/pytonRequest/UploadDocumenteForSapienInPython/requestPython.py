@@ -617,8 +617,6 @@ class Sapiens_requests_ordinary_procedures:
                                                                 json=self.dict_post,timeout=(5,15)) as m:
                         
                         status_requisicao = m.status_code
-                        #print(m.content)
-
                         tentativa += 1
                         procedure_timerun = datetime.now()
                         if (procedure_timerun > procedure_end) or (tentativa > 5):
@@ -646,23 +644,22 @@ class Sapiens_requests_ordinary_procedures:
 
 class Sapiens_requests_uploader_procedures:
 
-    def __init__(self, conteudo="", file_name=None, cookie=None, cookie_timeout=None,
-                 idPasta=None, ticket_upload=None, complemento=None, tipo_documento=None):
+    def __init__(self, conteudo="", file_name=None, cookie=None,
+                 idPasta=None, ticket_upload=None, complemento=None, tipo_documento=None, documento_id=None):
 
         self.conteudo = conteudo
         self.tamanho = len(str(self.conteudo))
         self.file_name = file_name
         self.cookie = cookie
-        self.cookie_timeout = cookie_timeout
         self.idPasta = idPasta
         self.ticket_upload = ticket_upload
         self.complemento = complemento
         self.tipo_documento = tipo_documento
         self.upload_header = self.uploader_request_header()
+        self.documento_id = documento_id
 
     def uploader_request_header(self):
 
-        if (self.cookie_timeout ):
 
             request_header = {'Accept': '*/*',
                 'Accept-Encoding': 'gzip, deflate, br',
@@ -688,14 +685,11 @@ class Sapiens_requests_uploader_procedures:
 
             return True,request_header
 
-        else:
-            return False,'Cookie expirado!'
-
     def upload_file_requisition(self):
 
         header_success = self.upload_header[0]
         headers = self.upload_header[1]
-        print(headers)
+        # print(headers)
 
         if header_success:
 
@@ -712,16 +706,19 @@ class Sapiens_requests_uploader_procedures:
             while not (status_requisicao == 200):
 
                 try:
-                    print(datetime.now())
-                    print("tentativa_requisicao: " + str(tentativa))
+                    # print(datetime.now())
+                    # print("tentativa_requisicao: " + str(tentativa))
 
-                    url_post = "https://sapiens.agu.gov.br/upload_pasta?pasta=" + str(self.idPasta) + "&ticket_upload=" + \
-                               self.ticket_upload + "&tipoDocumento=" + str(self.tipo_documento) + \
-                               "&complementoMovimento=" + str(self.complemento)
+                    # url_post = "https://sapiens.agu.gov.br/upload_pasta?pasta=" + str(self.idPasta)  + "&tipoDocumento=" + str(self.tipo_documento) + \
+                    #            "&complementoMovimento=" + str(self.complemento) 
+                    # url_post = "https://sapiens.agu.gov.br/upload_pasta?pasta=" + str(self.idPasta) + "&ticket_upload=" + \
+                    #            self.ticket_upload + "&tipoDocumento=" + str(self.tipo_documento) + \
+                    #            "&complementoMovimento=" + str(self.complemento)
 
+                    url_post = "https://sapiens.agu.gov.br/upload_arquivo?documento=" + str(self.documento_id)
                     with requests.post(url_post,headers=headers, data=self.conteudo,timeout=(5,15)) as m:
-                        print("Status_code da requisicao" + str(m.status_code))
-                        print(m.content)
+                        # print("Status_code da requisicao" + str(m.status_code))
+                        # print(m.content)
                         status_requisicao = m.status_code
                         tentativa += 1
                         procedure_timerun = datetime.now()
@@ -756,11 +753,14 @@ if __name__ == '__main__':
 
     tid = 0
 
-    payload = sys.argv[2]
-    #print(payload)
-    response = Sapiens_requests_ordinary_procedures(dict_post=payload, cookie=tuple_cookie).ordinary_requisition()
-
-    print(str(response[1]))
-
+    file_name = str(sys.argv[2])
+    # print(file_name)
+    conteudo = sys.argv[3]
+    # print(conteudo)
+    documento_id = str(sys.argv[4])
+    tipo_documento =str(sys.argv[5])
 
     
+    response = Sapiens_requests_uploader_procedures(tipo_documento= tipo_documento, cookie= tuple_cookie, file_name=file_name, conteudo=conteudo, idPasta="18348345", complemento= "testeSamir", documento_id=documento_id  ).upload_file_requisition()
+
+    print(str(response[1]))

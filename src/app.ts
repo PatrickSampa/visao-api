@@ -7,12 +7,6 @@ import { routes } from "./routes";
 const app = express();
 app.use(express.json());
 
-
-/**
- * The routes of API
- */
- app.use(routes);
-
 /**
  * open access to services
  */
@@ -27,6 +21,12 @@ app.use(bodyParser.json());
  * Configuration of logs
  */
 app.use(logger("dev"));
+
+/**
+ * The routes of API
+ */
+ app.use(routes);
+
 
 /**
  * Connection in DB

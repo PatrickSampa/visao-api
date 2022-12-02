@@ -4,9 +4,9 @@ import { RequestInformationForSamir } from './RequestInformationForSamir';
 export class RequestInformationForSamirController {
     constructor(private requestInformationForSamir: RequestInformationForSamir,) { }
     async handle(request: Request, response: Response): Promise<Response> {
-        const { cpf, senha } = request.body;
+        const { login, etiqueta, minutas } = request.body;
         try {
-            const cookie = await this.requestInformationForSamir.execute({ cpf, senha });
+            const cookie = await this.requestInformationForSamir.execute({ login, etiqueta, minutas});
             response.status(200).json(cookie);
         } catch (error) {
             return response.status(400).json({

@@ -16,7 +16,7 @@ export const routerAuth = Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Login'
+ *             $ref: '#/components/schemas/InserirMemoriaCalculo'
  *     responses:
  *       200:
  *         description: The user was successfully login

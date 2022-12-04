@@ -11,6 +11,7 @@ export function LoginSapiens(login: ILoginDTO): Promise<string> {
             dataPython = (`${data}`).replace("\r\n", "");
         })
         childPython.stderr.on("data", (data) => {
+            console.log(`${data} login`);
             reject(`${data}`)
         })
         childPython.on("close", (code) => {

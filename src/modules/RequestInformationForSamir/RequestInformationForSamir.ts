@@ -28,7 +28,7 @@ export class RequestInformationForSamir {
         //console.log(tarefas[0].pasta.processoJudicial.numero);
 
         for (var i = 0; i < tarefas.length; i++) {
-            const processo = tarefas[i].pasta.processoJudicial.numero;
+            const processo: string = tarefas[i].pasta.processoJudicial.numero;
             console.log(processo, tarefas.length);
             const tarefa_id = `${tarefas[i].id}`;
             const pasta_id = `${tarefas[i].pasta.id}`;

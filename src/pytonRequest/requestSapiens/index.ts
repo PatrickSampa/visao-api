@@ -36,7 +36,8 @@ export function RequestSapiens(coockie: string, operation:string): Promise<any> 
 
         })
         childPython.stderr.on("data", (data) => {
-            reject(`${data}`)
+            console.log(`${data} request`);
+            reject(`${data}`);
         })
         childPython.on("close", (code) => {
             // resolve(`${dataPython}`);

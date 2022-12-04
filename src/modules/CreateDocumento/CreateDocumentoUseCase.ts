@@ -5,7 +5,7 @@ export class CreateDocumentoUseCase {
     constructor(private RequestCreateDocumento:RequestCreateDocumento){};
     async execute(data: ICreateDocumentDTO): Promise<any> {
 
-        const playload = await this.RequestCreateDocumento.execute(data.pasta_id, data.usuario_nome, data.usuario_setor, data.tarefa_id, data.tid, data.tipoDocumento_id, data.modelo_id);
+        const playload = await this.RequestCreateDocumento.execute(data);
         
         const response = (await RequestSapiens(data.cookie, playload))
         

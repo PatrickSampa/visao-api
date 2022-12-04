@@ -2,6 +2,7 @@ export interface IGetTarefaDTO {
     usuario_id: string;
     cookie: string;
     etiqueta?: string;
+    processoJudicial?: string;
 }
 /**
  * @swagger
@@ -22,8 +23,12 @@ export interface IGetTarefaDTO {
  *         etiqueta:
  *           type: string
  *           description: etiqueta para pesquisar
+ *         processoJudicial:
+ *           type: string
+ *           description: processo judicial para pesquisar
  *       example:
  *         usuario_id: 3802191
  *         cookie: dcxscvssSDEBCq
  *         etiqueta: lido boot
+ *         processoJudicial: 1224651
  * */

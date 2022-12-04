@@ -1,7 +1,22 @@
 export class RequestGetTarefa {
-    async execute(idUsuario: string, etiqueta?: string): Promise<string> {
+    async execute(idUsuario: string, etiqueta?: string, processoJudicial?: string): Promise<string> {
+        let filter = "";
+
+        if(!(processoJudicial == null || processoJudicial == "")){
+            processoJudicial = `{"type":"string","value":"${processoJudicial}","field":"pasta.processoJudicial.numero"}`;
+        }else{
+            processoJudicial = ""
+        }
+
+
         if(!(etiqueta == null || etiqueta == "")){
-            etiqueta = `"gridfilter":[{"type":"string","value":"${etiqueta}","field":"postIt"}],`;
+            etiqueta = `{"type":"string","value":"${etiqueta}","field":"postIt"}`;
+        }else{
+            etiqueta = "";
+        }
+
+        if((!(etiqueta == null || etiqueta == "")) || !(processoJudicial == null || processoJudicial == "")){
+            filter =`"gridfilter":[${processoJudicial}${etiqueta == ""? "" : ","} ${etiqueta}],`
         }
         const getTarefa = `{
             "action": "SapiensAdministrativo_Tarefa",
@@ -50,7 +65,7 @@ export class RequestGetTarefa {
                             "value": "isNull"
                         }
                     ],
-                    ${etiqueta}
+                    ${filter}
                     "page": 1,
                     "start": 0,
                     "limit": 50
@@ -59,6 +74,7 @@ export class RequestGetTarefa {
             "type": "rpc",
             "tid": 2
         }`
+        console.log(getTarefa)
         
         return getTarefa;
     }

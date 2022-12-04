@@ -1,10 +1,12 @@
+import { ICreateDocumentDTO } from "../../DTO/CreateDocumentDTO";
+
 export class RequestCreateDocumento {
-    async execute(IDPasta:string,  usuario_nome: string, setorDistribuidor: string, tarefa_id: string, tid: string, tipoDocumento_id: "1344"|string, modelo_id?: string): Promise<string> {
-        if(tipoDocumento_id == null || tipoDocumento_id == ""){
-            tipoDocumento_id = "1344"
+    async execute(data: ICreateDocumentDTO): Promise<string> {
+        if(data.tipoDocumento_id == null || data.tipoDocumento_id == ""){
+            data.tipoDocumento_id = "1344"
         }
-        if(modelo_id == null || modelo_id == ""){
-            modelo_id = ""
+        if(data.modelo_id == null || data.modelo_id == ""){
+            data.modelo_id = ""
         }
         const createDocumento = `{
             "action":"SapiensAdministrativo_Documento",
@@ -17,15 +19,15 @@ export class RequestCreateDocumento {
                   "vinculado":false,
                   "copia":false,
                   "observacao":"",
-                  "autor":"${usuario_nome}",
-                  "pasta_id":${IDPasta},
-                  "redator":"${usuario_nome}",
+                  "autor":"${data.usuario_nome}",
+                  "pasta_id":${data.pasta_id},
+                  "redator":"${data.usuario_nome}",
                   "procedencia_id":"",
-                  "tipoDocumento_id":${tipoDocumento_id},
-                  "modelo_id":"${modelo_id}",
+                  "tipoDocumento_id":${data.tipoDocumento_id},
+                  "modelo_id":"${data.modelo_id}",
                   "comunicacaoRemessa_id":"",
-                  "setorOrigem_id":${setorDistribuidor},
-                  "tarefaOrigem_id":${tarefa_id},
+                  "setorOrigem_id":${data.usuario_setor},
+                  "tarefaOrigem_id":${data.tarefa_id},
                   "visibilidadeRestrita":false,
                   "semEfeito":false,
                   "localizadorOriginal":"",
@@ -42,7 +44,7 @@ export class RequestCreateDocumento {
                }
             ],
             "type":"rpc",
-            "tid":${tid}
+            "tid":${data.tid}
          }`
 
         //console.log(createDocumento)

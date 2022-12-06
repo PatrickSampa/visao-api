@@ -644,11 +644,14 @@ class Sapiens_requests_ordinary_procedures:
 
 class Sapiens_requests_uploader_procedures:
 
-    def __init__(self, conteudo="", file_name=None, cookie=None,
+    def __init__(self, conteudo1="", conteudo2="", conteudo3="", conteudo4="", file_name=None, cookie=None,
                  idPasta=None, ticket_upload=None, complemento=None, tipo_documento=None, documento_id=None):
 
-        self.conteudo = conteudo
-        self.tamanho = len(str(self.conteudo))
+        self.conteudo1 = conteudo1
+        self.conteudo2 = conteudo2
+        self.conteudo3 = conteudo3
+        self.conteudo4 = conteudo4
+        self.tamanho = len(str(self.conteudo1 + self.conteudo2 + self.conteudo3 + self.conteudo4))
         self.file_name = file_name
         self.cookie = cookie
         self.idPasta = idPasta
@@ -716,7 +719,7 @@ class Sapiens_requests_uploader_procedures:
                     #            "&complementoMovimento=" + str(self.complemento)
 
                     url_post = "https://sapiens.agu.gov.br/upload_arquivo?documento=" + str(self.documento_id)
-                    with requests.post(url_post,headers=headers, data=self.conteudo,timeout=(5,15)) as m:
+                    with requests.post(url_post, headers=headers, data=str(self.conteudo1 + self.conteudo2 + self.conteudo3 + self.conteudo4),timeout=(15,30)) as m:
                         # print("Status_code da requisicao" + str(m.status_code))
                         # print(m.content)
                         status_requisicao = m.status_code
@@ -755,12 +758,15 @@ if __name__ == '__main__':
 
     file_name = str(sys.argv[2])
     # print(file_name)
-    conteudo = sys.argv[3]
-    # print(conteudo)
-    documento_id = str(sys.argv[4])
-    tipo_documento =str(sys.argv[5])
+    conteudo1 = sys.argv[5]
+    conteudo2 = sys.argv[6]
+    conteudo3 = sys.argv[7]
+    conteudo4 = sys.argv[8]
+    # print(str(conteudo1 + conteudo2 + conteudo3 + conteudo4))
+    documento_id = str(sys.argv[3])
+    tipo_documento =str(sys.argv[4])
 
     
-    response = Sapiens_requests_uploader_procedures(tipo_documento= tipo_documento, cookie= tuple_cookie, file_name=file_name, conteudo=conteudo, idPasta="18348345", complemento= "testeSamir", documento_id=documento_id  ).upload_file_requisition()
-
+    response = Sapiens_requests_uploader_procedures(tipo_documento= tipo_documento, cookie= tuple_cookie, file_name=file_name, conteudo1=conteudo1, conteudo2=conteudo2, conteudo3=conteudo3, conteudo4=conteudo4, idPasta="18348345", complemento= "testeSamir", documento_id=documento_id  ).upload_file_requisition()
+    # print(str(response))
     print(str(response[1]))

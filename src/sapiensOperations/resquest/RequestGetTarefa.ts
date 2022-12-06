@@ -16,7 +16,7 @@ export class RequestGetTarefa {
         }
 
         if((!(etiqueta == null || etiqueta == "")) || !(processoJudicial == null || processoJudicial == "")){
-            filter =`"gridfilter":[${processoJudicial}${etiqueta == ""? "" : ","} ${etiqueta}],`
+            filter =`"gridfilter":[${processoJudicial}${(etiqueta != "" && processoJudicial != "")? "," : ""} ${etiqueta}],`
         }
         const getTarefa = `{
             "action": "SapiensAdministrativo_Tarefa",
@@ -74,7 +74,8 @@ export class RequestGetTarefa {
             "type": "rpc",
             "tid": 2
         }`
-        console.log(getTarefa)
+        // console.log(etiqueta == "" && processoJudicial == "")
+        // console.log(getTarefa)
         
         return getTarefa;
     }

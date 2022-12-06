@@ -22,14 +22,26 @@ export class RequestInformationForSamir {
         var tidNumber = 3;
         const minutas = data.minutas;
         let response: Array<any> = [];
+        console.log("data.etiqueta", data.etiqueta, "usuario_id", usuario_id);
         const tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta})
         //console.log(JSON.stringify(tarefas[0]));
-        const numero_processoJudicial = tarefas[0].pasta.processoJudicial.numero;
+        //const numero_processoJudicial = tarefas[0].pasta.processoJudicial.numero;
         //console.log(tarefas[0].pasta.processoJudicial.numero);
 
         for (var i = 0; i < tarefas.length; i++) {
-            const processo: string = tarefas[i].pasta.processoJudicial.numero;
-            console.log(processo, tarefas.length);
+            // console.log(tarefas[i].pasta.interessados[0]);
+            // console.log(tarefas[i].pasta.interessados.length);
+            var processo: string;
+            for (let j = 0; j < tarefas[j].pasta.interessados.length ; j++) {
+                // console.log(tarefas[i].pasta.interessados[j].pessoa.nome)
+                if((tarefas[i].pasta.interessados[j].pessoa.nome !== "MINIST�RIO P�BLICO fEDERAL (PROCURADORIA)" && 
+                        tarefas[i].pasta.interessados[j].pessoa.nome !== "INSTITUTO NACIONAL DO SEGURO SOCIAL-INSS" &&
+                        tarefas[i].pasta.interessados[j].pessoa.nome !== "INSTITUTO NACIONAL DO SEGURO SOCIAL - INSS")){
+                            processo = tarefas[i].pasta.interessados[j].pessoa.nome
+                            break;
+                }
+            }
+            // console.log(processo, tarefas.length);
             const tarefa_id = `${tarefas[i].id}`;
             const pasta_id = `${tarefas[i].pasta.id}`;
             const usuario_setor = `${tarefas[i].setorResponsavel_id}`
@@ -40,22 +52,26 @@ export class RequestInformationForSamir {
             // const updateTarefa = await updateTarefaUseCase.execute(cookie, (tarefas[i]));
             // response.push(updateTarefa[0]);
             const processoAfazer = minutas.find(minuta => minuta.numeroprocesso == processo);
+            //console.log(processoAfazer.numeroprocesso);
             if (processoAfazer != null) {
+                console.log("CONTEUDO LENG", processoAfazer.conteudo.length);
                 const createDocument = await createDocumentoUseCase.execute({ cookie, usuario_nome, usuario_setor, tarefa_id, pasta_id, tid })
-                // console.log("createDocument", createDocument[0]);
+                console.log("createDocument", createDocument[0].id);
                 let documento_id = createDocument[0].id;
                 const tipo_documento = "1344"
                 // const conteudo = new TesteDeHTML()
                 // console.log(JSON.stringify({texto: conteudo.execute()}))
-                const upload = await uploadDocumentUseCase.execute(cookie, `${processo}MemoriaCalculo.html`, processoAfazer.conteudo, documento_id, tipo_documento);
+                let nome = await processo.split(" ");
+                const upload = await uploadDocumentUseCase.execute(cookie, `${nome[0]}${documento_id}MemoriaCalculo.html`, processoAfazer.conteudo, documento_id, tipo_documento);
                 await response.push({ createDocument: createDocument[0], upload });
+                tidNumber++;
             }
 
             if (i == tarefas.length - 1) {
                 return response
             }
 
-            tidNumber++;
+            
         }
 
 

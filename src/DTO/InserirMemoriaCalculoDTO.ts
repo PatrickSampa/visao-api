@@ -37,6 +37,7 @@ export interface IInserirMemoriaCalculoDTO {
  *       example:
  *         login: {cpf: "02127337298", senha: Senhasenh4}
  *         etiqueta: LIDO BOOT
+ *         processoJudicial: 1451545
  *         minutas: [{numeroprocesso: "1000101", conteudo: "bhhmcasDD"}]
  *         
  * */

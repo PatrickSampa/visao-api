@@ -7,3 +7,5 @@ const SAPIENS_URL:any = process.env.SAPIENS_URL;
 export const Sapiens = axios.create({
     baseURL: SAPIENS_URL,
 });
+
+export {axios};

@@ -13,7 +13,7 @@ export class RequestCreateDocumento {
             "method":"createDocumento",
             "data":[
                {
-                  "numeroFolhas":1,
+                  "numeroFolhas":3,
                   "dataHoraProducao":"",
                   "localProducao":"",
                   "vinculado":false,

@@ -1,18 +1,13 @@
 
 import { getUsuarioUseCase } from '../GetUsuario';
 import { loginUseCase } from '../LoginUsuario';
-import { ILoginDTO } from '../../DTO/LoginDTO';
 import { getTarefaUseCase } from '../GetTarefa';
-import { TesteDeHTML } from '../../sapiensOperations/resquest/TesteDeHTML';
-import { uploadDocumentUseCase } from '../UploadDocument';
-import { createDocumentoUseCase } from '../CreateDocumento';
-import { updateTarefaUseCase } from '../UpdateTarefa';
-import { IInserirMemoriaCalculoDTO } from '../../DTO/InserirMemoriaCalculoDTO';
+import { IGetInformationsFromSapiensDTO } from '../../DTO/GetInformationsFromSapiensDTO';
 
 
-export class RequestInformationForSamir {
+export class GetInformationFromSapienForSamirUseCase {
 
-    async execute(data: IInserirMemoriaCalculoDTO): Promise<any> {
+    async execute(data: IGetInformationsFromSapiensDTO): Promise<any> {
         const cookie = await loginUseCase.execute(data.login);
         const usuario = (await getUsuarioUseCase.execute(cookie));
 
@@ -20,7 +15,6 @@ export class RequestInformationForSamir {
         // const usuario_setor = `${usuario[0].colaborador.lotacoes[0].setor.id}`;
         const usuario_nome = `${usuario[0].nome}`;
         var tidNumber = 3;
-        const minutas = data.minutas;
         let response: Array<any> = [];
         console.log("data.etiqueta", data.etiqueta, "usuario_id", usuario_id);
         const tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta})
@@ -33,13 +27,6 @@ export class RequestInformationForSamir {
             // console.log(tarefas[i].pasta.interessados.length);
             var processo: string;
             for (let j = 0; j < tarefas[j].pasta.interessados.length ; j++) {
-                // console.log(tarefas[i].pasta.interessados[j].pessoa.nome)
-                if((tarefas[i].pasta.interessados[j].pessoa.nome !== "MINIST�RIO P�BLICO fEDERAL (PROCURADORIA)" && 
-                        tarefas[i].pasta.interessados[j].pessoa.nome !== "INSTITUTO NACIONAL DO SEGURO SOCIAL-INSS" &&
-                        tarefas[i].pasta.interessados[j].pessoa.nome !== "INSTITUTO NACIONAL DO SEGURO SOCIAL - INSS")){
-                            processo = tarefas[i].pasta.interessados[j].pessoa.nome
-                            break;
-                }
             }
             // console.log(processo, tarefas.length);
             const tarefa_id = `${tarefas[i].id}`;
@@ -51,25 +38,6 @@ export class RequestInformationForSamir {
             // console.log(JSON.stringify(tarefas[i]));
             // const updateTarefa = await updateTarefaUseCase.execute(cookie, (tarefas[i]));
             // response.push(updateTarefa[0]);
-            const processoAfazer = minutas.find(minuta => minuta.numeroprocesso == processo);
-            //console.log(processoAfazer.numeroprocesso);
-            if (processoAfazer != null) {
-                console.log("CONTEUDO LENG", processoAfazer.conteudo.length);
-                const createDocument = await createDocumentoUseCase.execute({ cookie, usuario_nome, usuario_setor, tarefa_id, pasta_id, tid })
-                console.log("createDocument", createDocument[0].id);
-                let documento_id = createDocument[0].id;
-                const tipo_documento = "1344"
-                // const conteudo = new TesteDeHTML()
-                // console.log(JSON.stringify({texto: conteudo.execute()}))
-                let nome = await processo.split(" ");
-                const upload = await uploadDocumentUseCase.execute(cookie, `${nome[0]}${documento_id}MemoriaCalculo.html`, processoAfazer.conteudo, documento_id, tipo_documento);
-                await response.push({ createDocument: createDocument[0], upload });
-                tidNumber++;
-            }
-
-            if (i == tarefas.length - 1) {
-                return response
-            }
 
             
         }

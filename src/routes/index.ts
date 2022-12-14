@@ -2,12 +2,14 @@ import express from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Options } from '../config/swagger';
-import { routerAuth } from './RequestSapiens.routes';
+import { routerGetInformationsForSamir } from './GetInformationsForSamirroutes.routes';
+import { routerInsertSapiens } from './InsertSapiensForSamir.routes';
 
 
 export const routes = express();
 
-routes.use("/", routerAuth);
+routes.use("/samir", routerInsertSapiens);
+routes.use("/samir", routerGetInformationsForSamir);
 
 
 

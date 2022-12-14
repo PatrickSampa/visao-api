@@ -1,16 +1,16 @@
 import { Router } from "express";
-import { requestInformationForSamirController } from "../modules/RequestInformationForSamir";
+import { insertSapiensMinutasController } from "../modules/InsertSapiensMinutas";
 
 //const sessao = request.session();
 
-export const routerAuth = Router();
+export const routerInsertSapiens = Router();
 
 /**
  * @swagger
- * /teste:
+ * /samir/insertMinutas:
  *   post:
- *     summary: Teste
- *     tags: [Teste]
+ *     summary: Inser minutas in the sapiens
+ *     tags: [InserMinuta]
  *     requestBody:
  *       required: true
  *       content:
@@ -32,8 +32,8 @@ export const routerAuth = Router();
  */
 
 
-routerAuth.post("/teste", async (req, res) => {
-    return requestInformationForSamirController.handle(req, res);
+routerInsertSapiens.post("/insertMinutas", async (req, res) => {
+    return insertSapiensMinutasController.handle(req, res);
 })
 
 

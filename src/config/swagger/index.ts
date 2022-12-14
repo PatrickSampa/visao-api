@@ -26,12 +26,12 @@ export const swaggerDefinition = {
     },
     servers: [
       {
-        url: urlDOCKER,
-        description: 'Development server in the docker',
-      },
-      {
         url: urlAPI,
         description: 'Development server',
+      },
+      {
+        url: urlDOCKER,
+        description: 'Development server in the docker',
       },
     ],
   };

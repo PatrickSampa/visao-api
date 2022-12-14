@@ -6,8 +6,8 @@ export class GetUsuarioController {
     async handle(request: Request, response: Response): Promise<Response> {
         const { Coockie } = request.body;
         try {
-            const cookie = await this.GetUsuarioUseCase.execute(Coockie);
-            response.status(200).json(cookie);
+            const result = await this.GetUsuarioUseCase.execute(Coockie);
+            response.status(200).json(result);
         } catch (error) {
             return response.status(400).json({
                 message: error.message || "Unexpected error"

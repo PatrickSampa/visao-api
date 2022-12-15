@@ -3,6 +3,8 @@ import { getUsuarioUseCase } from '../GetUsuario';
 import { loginUseCase } from '../LoginUsuario';
 import { getTarefaUseCase } from '../GetTarefa';
 import { IGetInformationsFromSapiensDTO } from '../../DTO/GetInformationsFromSapiensDTO';
+import { IGetArvoreDocumentoDTO } from '../../DTO/GetArvoreDocumentoDTO';
+import { getArvoreDocumentoUseCase } from '../GetArvoreDocumento/index';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -16,7 +18,7 @@ export class GetInformationFromSapienForSamirUseCase {
         const usuario_nome = `${usuario[0].nome}`;
         var tidNumber = 3;
         let response: Array<any> = [];
-        console.log("data.etiqueta", data.etiqueta, "usuario_id", usuario_id);
+        //console.log("data.etiqueta", data.etiqueta, "usuario_id", usuario_id);
         const tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta})
         //console.log(JSON.stringify(tarefas[0]));
         //const numero_processoJudicial = tarefas[0].pasta.processoJudicial.numero;
@@ -26,22 +28,27 @@ export class GetInformationFromSapienForSamirUseCase {
             // console.log(tarefas[i].pasta.interessados[0]);
             // console.log(tarefas[i].pasta.interessados.length);
             var processo: string;
-            for (let j = 0; j < tarefas[j].pasta.interessados.length ; j++) {
-            }
             // console.log(processo, tarefas.length);
-            const tarefa_id = `${tarefas[i].id}`;
-            const pasta_id = `${tarefas[i].pasta.id}`;
-            const usuario_setor = `${tarefas[i].setorResponsavel_id}`
-            const tid = `${tidNumber}`;
-            tarefas[i].postIt = "MEMÓRIA DE CALCULO INSERIDA NA MINUTA";
-            tarefas[i].tid = tidNumber;
+            // const tarefa_id = `${tarefas[i].id}`;
+            // const pasta_id = `${tarefas[i].pasta.id}`;
+            // const usuario_setor = `${tarefas[i].setorResponsavel_id}`
+            // const tid = `${tidNumber}`;
+            // tarefas[i].postIt = "MEMÓRIA DE CALCULO INSERIDA NA MINUTA";
+            // tarefas[i].tid = tidNumber;
             // console.log(JSON.stringify(tarefas[i]));
             // const updateTarefa = await updateTarefaUseCase.execute(cookie, (tarefas[i]));
             // response.push(updateTarefa[0]);
+            const objectGetArvoreDocumento: IGetArvoreDocumentoDTO = {nup:  tarefas[i].pasta.NUP, chave: tarefas[i].pasta.chaveAcesso,  cookie, tarefa_id: tarefas[i].id}
+            // console.log(tarefa);
 
-            
+            const result = getArvoreDocumentoUseCase.execute(objectGetArvoreDocumento);
+            console.log(result);
+            response.push(result);
+
+            if (i == tarefas.length - 1) {
+                return response
+            }
         }
-
 
         // const usuario_setor = `41430`;
         // const usuario_nome = `MOISES ALEXANDRE POMPILHO DA COSTA`;

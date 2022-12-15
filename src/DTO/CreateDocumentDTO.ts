@@ -12,7 +12,7 @@ export interface ICreateDocumentDTO {
  * @swagger
  * components:
  *   schemas:
- *     Login:
+ *     CreateDocumentDTO:
  *       type: object
  *       required:
  *         - pasta_id

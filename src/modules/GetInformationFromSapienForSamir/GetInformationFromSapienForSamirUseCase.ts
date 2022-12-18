@@ -41,13 +41,14 @@ export class GetInformationFromSapienForSamirUseCase {
             const objectGetArvoreDocumento: IGetArvoreDocumentoDTO = {nup:  tarefas[i].pasta.NUP, chave: tarefas[i].pasta.chaveAcesso,  cookie, tarefa_id: tarefas[i].id}
             // console.log(tarefa);
 
-            const result = getArvoreDocumentoUseCase.execute(objectGetArvoreDocumento);
+            const result = await getArvoreDocumentoUseCase.execute(objectGetArvoreDocumento);
             console.log(result);
-            response.push(result);
+            response.push( tarefas[i]);
 
             if (i == tarefas.length - 1) {
                 return response
             }
+            tidNumber ++;
         }
 
         // const usuario_setor = `41430`;

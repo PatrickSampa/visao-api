@@ -222,6 +222,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/html-parser@^0.11.2":
+  "integrity" "sha512-XUiY5Aa6w0aWirorghdM58iJkUWrjCf2caLrxxAWhe2Vd1kQ3Q6lvURdMmrYmgWnOBcmbOVT4h/pc0ehCcp2vA=="
+  "resolved" "https://registry.npmjs.org/@types/html-parser/-/html-parser-0.11.2.tgz"
+  "version" "0.11.2"
+
 "@types/http-cache-semantics@^4.0.1":
   "integrity" "sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ=="
   "resolved" "https://registry.npmjs.org/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz"

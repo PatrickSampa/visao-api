@@ -8,6 +8,7 @@
     "start:docker:dev": "npm install && tsnd --transpile-only --respawn --ignore-watch node_modules src/server.ts"
   },
   "dependencies": {
+    "@types/html-parser": "^0.11.2",
     "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",

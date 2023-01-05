@@ -5,9 +5,11 @@ export class GetUsuarioUseCase {
     constructor(private RequestGetUsuario:RequestGetUsuario){};
     async execute(cookie: string): Promise<any> {
 
-        const getTarefa = await this.RequestGetUsuario.execute();
+        const getUsuario = await this.RequestGetUsuario.execute();
+
+        console.log(getUsuario);
         
-        const response = (await RequestSapiens(cookie, getTarefa))
+        const response = (await RequestSapiens(cookie, getUsuario));
         
         return response;
     }

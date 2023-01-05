@@ -10,7 +10,7 @@ export const routerGetInformationsForSamir = Router();
  * /samir/getInformationFromSapienForSamir:
  *   post:
  *     summary: get Information From Sapien For Samir
- *     tags: [InserMinuta]
+ *     tags: [GetInformationFromSapien]
  *     requestBody:
  *       required: true
  *       content:

@@ -21,7 +21,7 @@ export function UploadDocumenteForSapienInPython(coockie: string, operation:stri
     }
     console.log(conteudo1 == "", conteudo2 == "", conteudo3 == "", conteudo4 == "", coockie, operation, documento_id, tipo_documento);
     // const childPython = spawn("python", ["--version"])
-    const childPython = spawn("python", ["./src/pytonRequest/UploadDocumenteForSapienInPython/requestPython.py", coockie, operation, documento_id, tipo_documento, conteudo1, conteudo2, conteudo3, conteudo4])
+    const childPython = spawn("python3", ["./src/pytonRequest/UploadDocumenteForSapienInPython/requestPython.py", coockie, operation, documento_id, tipo_documento, conteudo1, conteudo2, conteudo3, conteudo4])
     let dataPythonResponse = [];
     return new Promise(function (resolve, reject) {
         childPython.stdout.on("data", async (data: Buffer) => {

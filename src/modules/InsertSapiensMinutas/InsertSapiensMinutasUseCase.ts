@@ -12,7 +12,9 @@ export class InsertSapiensMinutasUseCase {
 
     async execute(data: IInserirMemoriaCalculoDTO): Promise<any> {
         const cookie = await loginUseCase.execute(data.login);
+        console.log(cookie)
         const usuario = (await getUsuarioUseCase.execute(cookie));
+        console.log(usuario);
 
         const usuario_id = `${usuario[0].id}`;
         // const usuario_setor = `${usuario[0].colaborador.lotacoes[0].setor.id}`;
@@ -24,7 +26,7 @@ export class InsertSapiensMinutasUseCase {
         const tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta})
         //console.log(JSON.stringify(tarefas[0]));
         //const numero_processoJudicial = tarefas[0].pasta.processoJudicial.numero;
-        //console.log(tarefas[0].pasta.processoJudicial.numero);
+        console.log(tarefas[0].pasta.processoJudicial.numero);
 
         for (var i = 0; i < tarefas.length; i++) {
             // console.log(tarefas[i].pasta.interessados[0]);

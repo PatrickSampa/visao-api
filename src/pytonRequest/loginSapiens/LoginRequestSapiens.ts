@@ -12,7 +12,7 @@ export class RequestLoginSapiens {
     async handle(): Promise<string> {
         var cookie: string;
         let token = await this.getInicialToken();
-        console.log("", token);
+        console.log("token", token);
         return cookie
     }
     private async getInicialToken(): Promise<string> {

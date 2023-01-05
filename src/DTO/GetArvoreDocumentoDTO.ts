@@ -1,7 +1,7 @@
 export interface IGetArvoreDocumentoDTO {
     cookie: string
     nup: string;
-    chave: string;
+    chave: object;
     tarefa_id: string;
 }
 /**

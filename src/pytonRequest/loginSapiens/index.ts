@@ -1,7 +1,9 @@
 import { Coockie } from '../../type/Cookie'
 import { ILoginDTO } from '../../DTO/LoginDTO'
-
-export function LoginSapiens(login: ILoginDTO): Promise<string> {
+import { RequestLoginSapiens } from './LoginRequestSapiens';
+export async function LoginSapiens(login: ILoginDTO): Promise<string> {
+    const requestLoginSapiens = new RequestLoginSapiens(login);
+    console.log("",await requestLoginSapiens.handle())
     const { spawn } = require('child_process');
     // const childPython = spawn("python", ["--version"])
     const childPython = spawn("python3", ["./src/pytonRequest/loginSapiens/loginPython.py", login.cpf, login.senha])
@@ -18,4 +20,7 @@ export function LoginSapiens(login: ILoginDTO): Promise<string> {
             resolve(dataPython);
         })
     });
+    
+
 }
+

@@ -34,6 +34,9 @@ class Access_sapiens:
         dict_post = {"_csrf_token": str(self.token),"_username": self.uss,"_password": self.pass_sapiens,"_submit": "Login"}
         self.sessao.post(self.url_sapiens + self.login_check_extension,data=dict_post)
         cookies_logado  = self.sessao.cookies
+        print(self.sessao.cookies)
+        print(cookies_logado)
+        # print(str(self.sessao.status_code))
         return cookies_logado
 
     def get_cookie_expiration(self):
@@ -57,7 +60,7 @@ class Access_sapiens:
                 cookie_value_1 = self.cookies_values_internal_page_list[0]
                 cookie_value_2 = self.cookies_values_internal_page_list[1]
                 dict_cookie = f'{str(cookie_name_1)}={str(cookie_value_1)}; {str(cookie_name_2)}={str(cookie_value_2)}'
-                print(f'dict_cookie é {str(dict_cookie)}')
+                # print(f'dict_cookie é {str(dict_cookie)}')
                 return True, dict_cookie
             else:
                 return False, 'Houve um problema na tentativa de captar o cookie de acesso. Tente novamente!'
@@ -753,13 +756,14 @@ if __name__ == '__main__':
 
     #inicial_token = Access_sapiens(cpf='21631424858', senha='Brugio2021').get_inicial_page_token()
     #print(inicial_token)
-    acesso = Access_sapiens(cpf='21631424858',senha='Brugio2021')
+    # acesso = Access_sapiens(cpf='21631424858',senha='Brugio2021')
+    acesso = Access_sapiens(cpf='02127337298',senha='Senhasenh4')
     tuple_cookie = acesso.cookie
-    #print(tuple_cookie)
-    if tuple_cookie[0]:
-        tid = acesso.tid
-        #print(tid)
-        payload = Requests_payloads_sapiens(tid=tid).dict_getUsuario()
-        #print(payload)
-        response = Sapiens_requests_ordinary_procedures(dict_post=payload, cookie=tuple_cookie[1]).ordinary_requisition()
-        print(response)
+    print(tuple_cookie)
+    # if tuple_cookie[0]:
+    #     tid = acesso.tid
+    #     print(tid)
+    #     payload = Requests_payloads_sapiens(tid=tid).dict_getUsuario()
+    #     #print(payload)
+    #     response = Sapiens_requests_ordinary_procedures(dict_post=payload, cookie=tuple_cookie[1]).ordinary_requisition()
+    #     print(response)

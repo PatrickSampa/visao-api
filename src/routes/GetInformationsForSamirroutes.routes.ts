@@ -23,7 +23,7 @@ export const routerGetInformationsForSamir = Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Coockie'
+ *               $ref: '#/components/schemas/InformationsForCalcule'
  *                 
  *       500:
  *         description: Some server error

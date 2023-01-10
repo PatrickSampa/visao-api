@@ -23,7 +23,6 @@ export class RequestHeaders {
             'X-Requested-With': 'XMLHttpRequest'
         }
         RequestHeaders.Cookie = await RequestHeaders.Cookie.replace("\n", "");
-        console.log(RequestHeaders.Cookie, RequestHeaders.Cookie)
         return RequestHeaders;
     }
 }

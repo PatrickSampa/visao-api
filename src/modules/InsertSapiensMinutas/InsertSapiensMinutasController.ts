@@ -9,6 +9,7 @@ export class InsertSapiensMinutasController {
             const result = await this.requestInformationForSamir.execute({ login, etiqueta, minutas});
             response.status(200).json(result);
         } catch (error) {
+            console.error(error);
             return response.status(400).json({
                 message: error.message || "Unexpected error"
             });

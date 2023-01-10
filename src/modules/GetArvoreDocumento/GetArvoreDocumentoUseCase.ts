@@ -6,11 +6,12 @@ import { RequestHeaders } from "../../sapiensOperations/resquest/RequestHeaders"
 
 export class GetArvoreDocumentoUseCase {
 
-    async execute(data: IGetArvoreDocumentoDTO): Promise<any> {
+    async execute(data: IGetArvoreDocumentoDTO): Promise<Array<ResponseArvoreDeDocumento>> {
         console.log("AQUI")
+        const now = Date.now();
         const requestHeaderUploadArquivo = new RequestHeaders;
         const headers = await requestHeaderUploadArquivo.execute(data.cookie);
-        const baseURL = `https://sapiens.agu.gov.br/visualizador?nup=${data.nup}&chave=${data.chave}&tarefaId=${data.tarefa_id}`
+        const baseURL = `https://sapiens.agu.gov.br/visualizador/arvore?_dc=${now}&nup=${data.nup}&node=root`
         // console.log(headers);
         return await axios.get(baseURL, {headers}).then(response =>{
             //console.log(response.status)

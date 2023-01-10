@@ -14,7 +14,7 @@ export class InsertSapiensMinutasUseCase {
         const cookie = await loginUseCase.execute(data.login);
         console.log(cookie)
         const usuario = (await getUsuarioUseCase.execute(cookie));
-        console.log(usuario);
+        console.log("usuario:",usuario);
 
         const usuario_id = `${usuario[0].id}`;
         // const usuario_setor = `${usuario[0].colaborador.lotacoes[0].setor.id}`;

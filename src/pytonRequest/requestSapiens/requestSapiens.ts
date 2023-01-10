@@ -13,8 +13,6 @@ export async function requestSapiens(cookie: string, payload: string ): Promise<
         const data = await JSON.parse(payload);
         console.log(headers);
         return await axios.get(baseURL, {headers, data}).then(response =>{
-            console.log(response.status)
-            console.log(response.data)
             return response.data;
         }).catch(error =>{
             console.log(error)

@@ -1,7 +1,7 @@
 export interface IGetArvoreDocumentoDTO {
     cookie: string
     nup: string;
-    chave: object;
+    chave: string;
     tarefa_id: string;
 }
 /**
@@ -24,11 +24,12 @@ export interface IGetArvoreDocumentoDTO {
  *         chave:
  *           type: string
  *           description: chave da terfa
-  *        tarefa_id:
+ *         tarefa_id:
  *           type: string
  *           description: id da tarefa do processo
  *       example:
- *         nup: 1234
- *         tarefa_id: 1234
- *         chave: Emma White
+ *         cookie: djnakjfdnads
+ *         nup: '1234'
+ *         tarefa_id: '1234'
+ *         chave: 'Emma White'
  * */

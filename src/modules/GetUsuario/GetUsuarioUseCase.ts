@@ -6,8 +6,6 @@ export class GetUsuarioUseCase {
     async execute(cookie: string): Promise<any> {
 
         const getUsuario = await this.RequestGetUsuario.execute();
-
-        console.log(getUsuario);
         
         const response = (await RequestSapiens(cookie, getUsuario));
         

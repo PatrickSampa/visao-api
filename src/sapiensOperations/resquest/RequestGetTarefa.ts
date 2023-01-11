@@ -74,9 +74,6 @@ export class RequestGetTarefa {
             "type": "rpc",
             "tid": 2
         }`
-        // console.log(etiqueta == "" && processoJudicial == "")
-        // console.log(getTarefa)
-        
         return getTarefa;
     }
 }

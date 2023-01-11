@@ -1,16 +1,14 @@
 import axios from "axios";
-import { IGetArvoreDocumentoDTO } from "../../DTO/GetArvoreDocumentoDTO";
+import { IGetDocumentoDTO } from "../../DTO/GetDocumentoDTO";
 import { RequestHeaders } from "../../sapiensOperations/resquest/RequestHeaders";
 
+export class GetDocumentoUseCase {
 
-
-export class GetArvoreDocumentoUseCase {
-
-    async execute(data: IGetArvoreDocumentoDTO): Promise<Array<ResponseArvoreDeDocumento>> {
+    async execute(data: IGetDocumentoDTO): Promise<string> {
         const now = Date.now();
         const requestHeaderUploadArquivo = new RequestHeaders;
         const headers = await requestHeaderUploadArquivo.execute(data.cookie);
-        const baseURL = `https://sapiens.agu.gov.br/visualizador/arvore?_dc=${now}&nup=${data.nup}&node=root`
+        const baseURL = `https://sapiens.agu.gov.br/documento/${data.idDocument}`
         // console.log(headers);
         return await axios.get(baseURL, {headers}).then(response =>{
             //console.log(response.status)

@@ -7,7 +7,6 @@ export class RequestHeaders {
             'Accept-Encoding': 'gzip, deflate, br',
             'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
             'Connection': 'keep-alive',
-            'Content-Type': 'application/binary',
             'Cookie': `${cookie}`,
             'Host': 'sapiens.agu.gov.br',
             'Origin': 'https://sapiens.agu.gov.br',

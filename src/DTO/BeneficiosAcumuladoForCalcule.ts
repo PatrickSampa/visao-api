@@ -1,6 +1,6 @@
 export interface IBeneficiosAcumuladoForCalculeDTO { 
     dib: string, 
-    dif: string, 
+    dcb: string, 
     beneficio: string, 
     rmi: number 
 }
@@ -13,16 +13,16 @@ export interface IBeneficiosAcumuladoForCalculeDTO {
  *       type: object
  *       required:
  *         - dib
- *         - dif
+ *         - dcb
  *         - beneficio
  *         - rmi
  *       properties:
  *         dib:
  *           type: string
  *           description: dib do benefico acumulado
- *         dif:
+ *         dcb:
  *           type: string
- *           description: difdo benefico acumulado
+ *           description: dcbdo benefico acumulado
  *         beneficio:
  *           type: string
  *           description: tipo do benefico acumulado
@@ -31,7 +31,7 @@ export interface IBeneficiosAcumuladoForCalculeDTO {
  *           description: rmi do benefico acumulado
  *       example:
  *         dib: '10/10/2018'
- *         dif: '12/09/2021'
+ *         dcb: '12/09/2021'
  *         beneficio: 'Seguro desemprego'
  *         rmi: 1245
  * */

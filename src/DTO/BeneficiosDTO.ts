@@ -3,7 +3,8 @@ export interface IBeneficiosDTO {
     dcb: string,
     dip?: string, 
     beneficio: string, 
-    rmi?: number, 
+    rmi?: string, 
     tipo: string,
     nb:string
+    dibAnterior?: string
 }

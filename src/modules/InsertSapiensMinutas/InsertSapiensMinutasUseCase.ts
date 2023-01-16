@@ -74,21 +74,5 @@ export class InsertSapiensMinutasUseCase {
             
         }
 
-
-        // const usuario_setor = `41430`;
-        // const usuario_nome = `MOISES ALEXANDRE POMPILHO DA COSTA`;
-        // const tarefa_id = `135835019`;
-        // const pasta_id = `18348345`;
-        // const tid = `${tidNumber}`;
-        // const createDocument = await createDocumentoUseCase.execute({ cookie, usuario_nome, usuario_setor, tarefa_id, pasta_id, tid }); 
-        // return createDocument[0];
-        //const conteudo = new TesteDeHTML()
-
-        //console.log("setor", usuario_setor, "nome", usuario_nome)
-
-
-        //return usuario[0].id;
-        // return uploadDocumentUseCase.execute(coockie, "testeDeHTML.html", await conteudo.execute());
-
     }
 }

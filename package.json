@@ -20,6 +20,7 @@
     "flatted": "^3.2.7",
     "got": "^12.5.2",
     "https": "^1.0.0",
+    "jsdom": "^21.0.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": " ^1.10.0 ",
     "node-fetch": "^3.2.10",

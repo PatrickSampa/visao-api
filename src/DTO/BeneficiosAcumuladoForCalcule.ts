@@ -2,7 +2,7 @@ export interface IBeneficiosAcumuladoForCalculeDTO {
     dib: string, 
     dcb: string, 
     beneficio: string, 
-    rmi: number 
+    rmi: string 
 }
 
 /**

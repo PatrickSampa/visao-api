@@ -1,3 +1,5 @@
+import { ResponseArvoreDeDocumento } from "../../sapiensOperations/response/ResponseArvoreDeDocumento";
+
 export function coletarCitacao(arrayDeDocumentos: ResponseArvoreDeDocumento[]): string {
     const ObjectCitacao = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.nome == "CITAÇÃO");
     if (ObjectCitacao == null) {

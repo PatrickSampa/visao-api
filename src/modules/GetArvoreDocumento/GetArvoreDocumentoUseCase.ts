@@ -1,6 +1,7 @@
 import axios from "axios";
 import { IGetArvoreDocumentoDTO } from "../../DTO/GetArvoreDocumentoDTO";
 import { RequestHeaders } from "../../sapiensOperations/resquest/RequestHeaders";
+import { ResponseArvoreDeDocumento } from "../../sapiensOperations/response/ResponseArvoreDeDocumento";
 
 
 

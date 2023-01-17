@@ -8,15 +8,14 @@ import { getArvoreDocumentoUseCase } from '../GetArvoreDocumento/index';
 import { IInformationsForCalculeDTO } from '../../DTO/InformationsForCalcule';
 import { getDocumentoUseCase } from '../GetDocumento';
 import { updateEtiquetaUseCase } from '../UpdateEtiqueta';
-import { IBeneficiosDTO } from '../../DTO/BeneficiosDTO';
 import { getXPathText } from "../../helps/GetTextoPorXPATH";
-import { IBeneficiosAcumuladoForCalculeDTO } from "../../DTO/BeneficiosAcumuladoForCalcule";
-import { correçaoDoErroDeFormatoDoSapiens } from "../../helps/correçaoDoErroDeFormatoDoSapiens";
 import { coletarCitacao } from "./coletarCitacao";
 import { VerificaçaoSeDosPrevInvalido } from "./verificaçaoSeDosPrevInvalido";
 import { getInformaçoesIniciasDosBeneficios } from './getInformaçoesIniciasDosBeneficios';
 import { getInformaçoesSecudariaDosBeneficios } from './getInformaçoesSecudariaDosBeneficios';
 import { fazerInformationsForCalculeDTO } from './contruirInformationsForCalcule';
+import { ResponseArvoreDeDocumento } from '../../sapiensOperations/response/ResponseArvoreDeDocumento';
+import { coletarArvoreDeDocumentoDoPassivo } from './coletarArvoreDeDocumentoDoPassivo';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -45,13 +44,18 @@ export class GetInformationFromSapienForSamirUseCase {
                     continue
                 }
 
-                const objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                var objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
 
-                const objectDosPrevNaoExisti = objectDosPrev == null;
+                var objectDosPrevNaoExisti = objectDosPrev == null;
                 if (objectDosPrevNaoExisti) {
-                    console.log("DOSPREV NÃO ECONTRADO");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
-                    continue;
+                    arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
+                    objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                    objectDosPrevNaoExisti = objectDosPrev == null;
+                    if (objectDosPrevNaoExisti) {
+                        console.log("DOSPREV NÃO ECONTRADO");
+                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
+                        continue;
+                    }
                 }
 
                 const dosPrevSemIdParaPesquisa = (objectDosPrev.documentoJuntado.componentesDigitais.length) <= 0;

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 
 dotenv.config();
-const PORT = process.env.PORT;
+const PORT = process.env.API_PORT;
 const urlAPI = `http://localhost:${PORT}`;
 
 const PORT_DOCKER = process.env.PORT_DOCKER;

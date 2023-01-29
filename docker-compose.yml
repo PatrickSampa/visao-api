@@ -1,12 +1,13 @@
 version: '3'
 services:
   app:
-    network_mode: host
     container_name: visao
     restart: always
     build: .
+    environment:
+      CMD_Python: python3
     ports:
-      - ${PORT_DOCKER}:${PORT}
+      - ${PORT_DOCKER}:${API_PORT}
     volumes:
       - .:/user/src/app
       - /user/src/app/node_modules

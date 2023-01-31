@@ -8,6 +8,3 @@ services:
       CMD_Python: python3
     ports:
       - ${PORT_DOCKER}:${API_PORT}
-    volumes:
-      - .:/user/src/app
-      - /user/src/app/node_modules

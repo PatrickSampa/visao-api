@@ -1,6 +1,7 @@
 import { IBeneficiosDTO } from '../../DTO/BeneficiosDTO';
+import { correçaoDoErroDeFormatoDoSapiens } from '../../helps/CorreçaoDoErroDeFormatoDoSapiens';
 import { getXPathText } from "../../helps/GetTextoPorXPATH";
-import { correçaoDoErroDeFormatoDoSapiens } from "../../helps/correçaoDoErroDeFormatoDoSapiens";
+
 
 export async function getInformaçoesSecudariaDosBeneficios(beneficios: IBeneficiosDTO[], paginaHTML_DOSPREV_Formatada: any): Promise<IBeneficiosDTO[]> {
     const numeroMaximoParaProcurarAPosiçaoDasDivDaTabelaDeBeneficio = 6;

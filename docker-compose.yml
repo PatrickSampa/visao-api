@@ -4,7 +4,8 @@ services:
     container_name: visao
     restart: always
     build: .
+    network_mode: host
     environment:
       CMD_Python: python3
     ports:
-      - ${PORT_DOCKER}:${API_PORT}
+      - 8080:3004

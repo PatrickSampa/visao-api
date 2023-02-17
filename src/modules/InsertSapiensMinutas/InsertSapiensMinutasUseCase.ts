@@ -6,6 +6,7 @@ import { uploadDocumentUseCase } from '../UploadDocument';
 import { createDocumentoUseCase } from '../CreateDocumento';
 import { updateTarefaUseCase } from '../UpdateTarefa';
 import { IInserirMemoriaCalculoDTO } from '../../DTO/InserirMemoriaCalculoDTO';
+import { updateEtiquetaUseCase } from '../UpdateEtiqueta';
 
 
 export class InsertSapiensMinutasUseCase {
@@ -22,12 +23,15 @@ export class InsertSapiensMinutasUseCase {
         let response: Array<any> = [];
         console.log("data.etiqueta", data.etiqueta, "usuario_id", usuario_id);
         const tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta})
-        console.log(tarefas[0].pasta.processoJudicial.numero);
+        //console.log(tarefas[0].pasta.processoJudicial.numero);
 
         for (var i = 0; i < tarefas.length; i++) {
+            console.log("i tarefas anexar: " + i);
             var processo: string;
             for (let j = 0; j < tarefas[j].pasta.interessados.length ; j++) {
                 if((tarefas[i].pasta.interessados[j].pessoa.nome !== "MINIST�RIO P�BLICO fEDERAL (PROCURADORIA)" && 
+                tarefas[i].pasta.interessados[j].pessoa.nome !== "MINISTERIO PUBLICO FEDERAL (PROCURADORIA)" &&
+                tarefas[i].pasta.interessados[j].pessoa.nome !== "CENTRAL DE ANÁLISE DE BENEFÍCIO - CEAB/INSS" &&
                         tarefas[i].pasta.interessados[j].pessoa.nome !== "INSTITUTO NACIONAL DO SEGURO SOCIAL-INSS" &&
                         tarefas[i].pasta.interessados[j].pessoa.nome !== "INSTITUTO NACIONAL DO SEGURO SOCIAL - INSS")){
                             processo = tarefas[i].pasta.interessados[j].pessoa.nome
@@ -52,6 +56,7 @@ export class InsertSapiensMinutasUseCase {
                 let nome = await processo.split(" ");
                 const upload = await uploadDocumentUseCase.execute(cookie, `${nome[0]}${documento_id}MemoriaCalculo.html`, processoAfazer.conteudo, documento_id, tipo_documento);
                 await response.push({ createDocument: createDocument[0], upload });
+                (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "MEMORIA ANEXADA", tarefaId: parseInt(tarefa_id) }));
                 tidNumber++;
             }
 

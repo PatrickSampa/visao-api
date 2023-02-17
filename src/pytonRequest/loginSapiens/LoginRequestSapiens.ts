@@ -23,7 +23,7 @@ export class RequestLoginSapiens {
         var cookie: string;
         let headers = await this.getInicialToken();
         this.token = headers.token;
-        cookie = (await this.getCookie(headers.arrayCookie)).split(";")[0];
+        cookie = (await this.getCookie(headers.arrayCookie));
         this.headers = requestHeadersLogingCheck.execute(cookie);
         cookie = await this.getCookie(await this.getLoginCookies());
         // console.log("cookie: ", cookie);

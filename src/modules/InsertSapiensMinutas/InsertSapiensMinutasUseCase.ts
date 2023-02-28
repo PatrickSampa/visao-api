@@ -4,7 +4,6 @@ import { loginUseCase } from '../LoginUsuario';
 import { getTarefaUseCase } from '../GetTarefa';
 import { uploadDocumentUseCase } from '../UploadDocument';
 import { createDocumentoUseCase } from '../CreateDocumento';
-import { updateTarefaUseCase } from '../UpdateTarefa';
 import { IInserirMemoriaCalculoDTO } from '../../DTO/InserirMemoriaCalculoDTO';
 import { updateEtiquetaUseCase } from '../UpdateEtiqueta';
 

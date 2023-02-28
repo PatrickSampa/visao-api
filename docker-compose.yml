@@ -23,8 +23,8 @@ services:
       placement:
         constraints:
           - node.role == worker
-    expose:
-      - "3001"
+    # expose:
+    #   - "3001"
   nginx:
     restart: always
     image: nginx

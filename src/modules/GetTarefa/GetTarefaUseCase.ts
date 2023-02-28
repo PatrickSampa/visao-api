@@ -6,7 +6,7 @@ export class GetTarefaUseCase {
     constructor(private RequestGetTarefa:RequestGetTarefa){};
     async execute(data: IGetTarefaDTO): Promise<Array<any>> {
 
-        const getTarefa = await this.RequestGetTarefa.execute(data.usuario_id, data.etiqueta);
+        const getTarefa = await this.RequestGetTarefa.execute(data.usuario_id, data.etiqueta, data.processoJudicial ,data.qunatidadeDeProcesso);
         
         const response = (await RequestSapiens(data.cookie, getTarefa))
         

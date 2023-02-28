@@ -14,12 +14,9 @@ export class RequestHeadersLogingCheck {
             'Connection': 'keep-alive',
             'Referer': 'https://sapiens.agu.gov.br/login',
             'Cookie': cookie,
-            'Upgrade-Insecure-Requests': 1,
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'same-origin'
+
         }
-        // RequestHeadersLoginCheck.Cookie = await RequestHeadersLoginCheck.Cookie.replace('\n', '');
+        RequestHeadersLoginCheck.Cookie = await RequestHeadersLoginCheck.Cookie.replace("\n", "");
         return RequestHeadersLoginCheck;
     }
 }

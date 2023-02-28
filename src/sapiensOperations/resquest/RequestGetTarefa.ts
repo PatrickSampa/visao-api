@@ -1,6 +1,10 @@
 export class RequestGetTarefa {
-    async execute(idUsuario: string, etiqueta?: string, processoJudicial?: string): Promise<string> {
+    async execute(idUsuario: string, etiqueta?: string, processoJudicial?: string, qunatidadeDeProcesso?: number): Promise<string> {
         let filter = "";
+
+        if(qunatidadeDeProcesso == 0 || qunatidadeDeProcesso == null){
+            qunatidadeDeProcesso = 50;
+        }
 
         if(!(processoJudicial == null || processoJudicial == "")){
             processoJudicial = `{"type":"string","value":"${processoJudicial}","field":"pasta.processoJudicial.numero"}`;
@@ -68,7 +72,7 @@ export class RequestGetTarefa {
                     ${filter}
                     "page": 1,
                     "start": 0,
-                    "limit": 50
+                    "limit": ${qunatidadeDeProcesso}
                 }
             ],
             "type": "rpc",

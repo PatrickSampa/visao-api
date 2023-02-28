@@ -13,7 +13,6 @@ export class InsertSapiensMinutasUseCase {
     async execute(data: IInserirMemoriaCalculoDTO): Promise<any> {
         const cookie = await loginUseCase.execute(data.login);
         const usuario = (await getUsuarioUseCase.execute(cookie));
-
         const usuario_id = `${usuario[0].id}`;
        
         const usuario_nome = `${usuario[0].nome}`;
@@ -26,8 +25,9 @@ export class InsertSapiensMinutasUseCase {
 
         for (var i = 0; i < tarefas.length; i++) {
             console.log("i tarefas anexar: " + i);
+            console.log(tarefas[i])
             var processo: string;
-            for (let j = 0; j < tarefas[j].pasta.interessados.length ; j++) {
+            for (let j = 0; j < tarefas[i].pasta.interessados.length ; j++) {
                 if((tarefas[i].pasta.interessados[j].pessoa.nome !== "MINIST�RIO P�BLICO fEDERAL (PROCURADORIA)" && 
                 tarefas[i].pasta.interessados[j].pessoa.nome !== "MINISTERIO PUBLICO FEDERAL (PROCURADORIA)" &&
                 tarefas[i].pasta.interessados[j].pessoa.nome !== "CENTRAL DE ANÁLISE DE BENEFÍCIO - CEAB/INSS" &&
@@ -37,6 +37,7 @@ export class InsertSapiensMinutasUseCase {
                             break;
                 }
             }
+            
             const tarefa_id = `${tarefas[i].id}`;
             const pasta_id = `${tarefas[i].pasta.id}`;
             const usuario_setor = `${tarefas[i].setorResponsavel_id}`

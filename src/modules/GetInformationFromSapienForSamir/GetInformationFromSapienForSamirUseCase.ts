@@ -125,10 +125,10 @@ export class GetInformationFromSapienForSamirUseCase {
             console.log(error);
             console.log(response.length)
             if (response.length > 0) {
-                return await response
+                return response
             }
             else {
-                new error;
+                return error;
             }
         }
     }

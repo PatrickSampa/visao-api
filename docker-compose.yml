@@ -2,7 +2,7 @@ version: '3'
 services:
   app:
     restart: always
-    image: moisespompilio/visao:1.0.1
+    image: moisespompilio/visao:1.0.2
     hostname: visao-{{.Task.Slot}}
     networks:
       - visao

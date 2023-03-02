@@ -114,7 +114,8 @@ export class GetInformationFromSapienForSamirUseCase {
                 const citacao = coletarCitacao(arrayDeDocumentos)
                 let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, parseInt(tarefaId))
                 // { beneficio: "teste", dibAnterior: "teste", beneficioAcumuladoBoolean: false, dibInicial: "teste", dip: "teste", id: parseInt(tarefaId), nb: "teste", rmi: "teste", tipo: "teste", numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao },
-                console.log(informationsForCalculeDTO);
+                //console.log(informationsForCalculeDTO);
+                console.log("processo coletado");
                 response.push(informationsForCalculeDTO);
                 // Ativar quando entrar em produção
                 await updateEtiquetaUseCase.execute({ cookie, etiqueta: "LIDO BOOT", tarefaId })

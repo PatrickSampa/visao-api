@@ -43,7 +43,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     arrayDeDocumentos = (await getArvoreDocumentoUseCase.execute(objectGetArvoreDocumento)).reverse();
                 } catch (error) {
                     console.log(error);
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }));
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA GERAÇAO", tarefaId }));
                     continue
                 }
 
@@ -78,21 +78,21 @@ export class GetInformationFromSapienForSamirUseCase {
                 console.log("informacaoDeCabeçalho", informacaoDeCabeçalho)
                 const informacaoDeCabeçalhoNaoExiste = !informacaoDeCabeçalho;
                 if (informacaoDeCabeçalhoNaoExiste) {
-                    console.log("DOSPREV INVALIDO");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV INVALIDO", tarefaId }))
+                    console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE", tarefaId }))
                     continue
                 }
                 // ative quando for para produçao
                 if (VerificaçaoSeDosPrevInvalido(informacaoDeCabeçalho)) {
-                    console.log("DOSPREV INVALIDO");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV INVALIDO", tarefaId }))
+                    console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE", tarefaId }))
                     continue
                 }
 
                 var beneficios = await getInformaçoesIniciasDosBeneficios(parginaDosPrevFormatada)
                 if (beneficios.length <= 0) {
                     console.log("DOSPREV SEM BENEFICIO VALIDOS");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV SEM BENEFICIO VALIDOS", tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV SEM BENEFICIOS VALIDOS", tarefaId }))
                     continue
                 }
                 beneficios = await getInformaçoesSecudariaDosBeneficios(beneficios, parginaDosPrevFormatada)

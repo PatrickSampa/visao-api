@@ -12,19 +12,11 @@ services:
       API_PORT: 3001
     ports:
       - 3001-3005:3001
-      # se preferir, pode usar a notação abaixo para definir a porta do host para cada réplica individualmente
-      # - 3001:3001
-      # - 3002:3002
-      # - 3003:3003
-      # - 3004:3004
-      # - 3005:3005
     deploy:
       replicas: 5
       placement:
         constraints:
           - node.role == worker
-    # expose:
-    #   - "3001"
   nginx:
     restart: always
     image: nginx

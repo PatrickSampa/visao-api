@@ -17,14 +17,13 @@ export class AtualizacaoDossiePrevidenciarioUseCase {
 
             const usuario_id = `${usuario[0].id}`;
 
-
             let response: Array<any> = [];
             data.etiqueta = await data.etiqueta.toUpperCase()
             const etiquetaInvalida = data.etiqueta.includes("FALHA") || data.etiqueta.includes("ATUALIZAÇAO")
 
             if (etiquetaInvalida) {
                 console.log(etiquetaInvalida)
-                reject(new Error("etiqueta não pode ter as palavras falha e atualizaçao"))
+                reject(new Error("etiqueta não pode ter as palavras falha e/ou atualizaçao"))
             }
             console.log("data.etiqueta", data.etiqueta, "usuario_id", usuario_id);
             const qunatidadeDeProcesso = 50;
@@ -63,7 +62,7 @@ export class AtualizacaoDossiePrevidenciarioUseCase {
                     }
 
                 }
-            } while (tarefas.length >= 50);
+            } while (tarefas.length >= qunatidadeDeProcesso);
 
             resolve(await response)
         })

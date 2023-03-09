@@ -1,6 +1,6 @@
-import { IBeneficiosAcumuladoForCalculeDTO } from "../../DTO/BeneficiosAcumuladoForCalcule";
-import { IBeneficiosDTO } from "../../DTO/BeneficiosDTO";
-import { IInformationsForCalculeDTO } from "../../DTO/InformationsForCalcule";
+import { IBeneficiosAcumuladoForCalculeDTO } from "../../../DTO/BeneficiosAcumuladoForCalcule";
+import { IBeneficiosDTO } from "../../../DTO/BeneficiosDTO";
+import { IInformationsForCalculeDTO } from "../../../DTO/InformationsForCalcule";
 
 export async function fazerInformationsForCalculeDTO(beneficios: IBeneficiosDTO[], numeroDoProcesso: string, dataAjuizamento: string, nome: string, cpf: string, urlProcesso: string, citacao: string, id: number): Promise<IInformationsForCalculeDTO> {
     var result: IInformationsForCalculeDTO = { beneficio: "", dibAnterior: "", beneficioAcumuladoBoolean: false, dibInicial: "", dip: "", id: id, nb: "", rmi: "", tipo: "", numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao };

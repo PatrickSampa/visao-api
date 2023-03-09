@@ -1,10 +1,10 @@
 const { JSDOM } = require('jsdom');
-import { IGetArvoreDocumentoDTO } from '../../DTO/GetArvoreDocumentoDTO';
-import { ResponseArvoreDeDocumento } from '../../sapiensOperations/response/ResponseArvoreDeDocumento';
-import { getArvoreDocumentoUseCase } from '../GetArvoreDocumento';
-import { getCapaDoPassivaUseCase } from '../GetCapaDoPassiva/index';
-import { getXPathText } from "../../helps/GetTextoPorXPATH";
-import { correçaoDoErroDeFormatoDoSapiens } from '../../helps/CorreçaoDoErroDeFormatoDoSapiens';
+import { IGetArvoreDocumentoDTO } from '../../../DTO/GetArvoreDocumentoDTO';
+import { ResponseArvoreDeDocumento } from '../../../sapiensOperations/response/ResponseArvoreDeDocumento';
+import { getArvoreDocumentoUseCase } from '../../GetArvoreDocumento';
+import { getCapaDoPassivaUseCase } from '../../GetCapaDoPassiva/index';
+import { getXPathText } from "../../../helps/GetTextoPorXPATH";
+import { correçaoDoErroDeFormatoDoSapiens } from '../../../helps/CorreçaoDoErroDeFormatoDoSapiens';
 export async function coletarArvoreDeDocumentoDoPassivo(data: IGetArvoreDocumentoDTO): Promise<Array<ResponseArvoreDeDocumento>>{
     const capaHTMLDoPassivo = await getCapaDoPassivaUseCase.execute(data.nup, data.cookie)
     const capaDoPassivoFormata =  new JSDOM(capaHTMLDoPassivo)

@@ -1,6 +1,6 @@
-import { IBeneficiosDTO } from "../../DTO/BeneficiosDTO";
-import { correçaoDoErroDeFormatoDoSapiens } from "../../helps/CorreçaoDoErroDeFormatoDoSapiens";
-import { getXPathText } from "../../helps/GetTextoPorXPATH";
+import { IBeneficiosDTO } from "../../../DTO/BeneficiosDTO";
+import { correçaoDoErroDeFormatoDoSapiens } from "../../../helps/CorreçaoDoErroDeFormatoDoSapiens";
+import { getXPathText } from "../../../helps/GetTextoPorXPATH";
 
 export async function  getInformaçoesIniciasDosBeneficios(paginaHTML_DOSPREV_Formatada: any): Promise<IBeneficiosDTO[]> {
     const result: IBeneficiosDTO[] = [];

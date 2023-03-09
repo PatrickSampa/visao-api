@@ -9,13 +9,14 @@ import { IInformationsForCalculeDTO } from '../../DTO/InformationsForCalcule';
 import { getDocumentoUseCase } from '../GetDocumento';
 import { updateEtiquetaUseCase } from '../UpdateEtiqueta';
 import { getXPathText } from "../../helps/GetTextoPorXPATH";
-import { coletarCitacao } from "./coletarCitacao";
-import { VerificaçaoSeDosPrevInvalido } from "./verificaçaoSeDosPrevInvalido";
-import { getInformaçoesIniciasDosBeneficios } from './getInformaçoesIniciasDosBeneficios';
-import { getInformaçoesSecudariaDosBeneficios } from './getInformaçoesSecudariaDosBeneficios';
-import { fazerInformationsForCalculeDTO } from './contruirInformationsForCalcule';
+import { coletarCitacao } from "./helps/coletarCitacao";
+import { VerificaçaoSeDosPrevInvalido } from "./helps/verificaçaoSeDosPrevInvalido";
+import { getInformaçoesIniciasDosBeneficios } from './helps/getInformaçoesIniciasDosBeneficios';
+import { getInformaçoesSecudariaDosBeneficios } from './helps/getInformaçoesSecudariaDosBeneficios';
+import { fazerInformationsForCalculeDTO } from './helps/contruirInformationsForCalcule';
 import { ResponseArvoreDeDocumento } from '../../sapiensOperations/response/ResponseArvoreDeDocumento';
-import { coletarArvoreDeDocumentoDoPassivo } from './coletarArvoreDeDocumentoDoPassivo';
+import { coletarArvoreDeDocumentoDoPassivo } from './helps/coletarArvoreDeDocumentoDoPassivo';
+import { isValidInformationsForCalculeDTO } from './helps/validadorDeInformationsForCalculeDTO';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -116,9 +117,15 @@ export class GetInformationFromSapienForSamirUseCase {
                 // { beneficio: "teste", dibAnterior: "teste", beneficioAcumuladoBoolean: false, dibInicial: "teste", dip: "teste", id: parseInt(tarefaId), nb: "teste", rmi: "teste", tipo: "teste", numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao },
                 //console.log(informationsForCalculeDTO);
                 console.log("processo coletado");
-                response.push(informationsForCalculeDTO);
+                if(isValidInformationsForCalculeDTO(informationsForCalculeDTO)){
+                    response.push(informationsForCalculeDTO);
+                    await updateEtiquetaUseCase.execute({ cookie, etiqueta: "LIDO BOOT", tarefaId })
+                }else{
+                    await updateEtiquetaUseCase.execute({ cookie, etiqueta: "FALHA NA LEITURA DOS BENEFICIOS", tarefaId })
+                }
+                
                 // Ativar quando entrar em produção
-                await updateEtiquetaUseCase.execute({ cookie, etiqueta: "LIDO BOOT", tarefaId })
+                
 
             }
             return await response

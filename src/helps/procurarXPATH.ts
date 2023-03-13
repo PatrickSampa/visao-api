@@ -1,8 +1,7 @@
-const { JSDOM } = require('jsdom');
 const xpath = require('xpath');
 
-export function findTextInHTML(html: string, text: string): string[] {
-    const dom = new JSDOM(html);
+export function findTextInHTML(html: any, text: string): string[] {
+    const dom = html
     const xpathExpression = `//*[text()[contains(.,'${text}')]]`;
     const nodes = xpath.select(xpathExpression, dom.window.document);
     //console.log("dom.window.document", dom.window.document)

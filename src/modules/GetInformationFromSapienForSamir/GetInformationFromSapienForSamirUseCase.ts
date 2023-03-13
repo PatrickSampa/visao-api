@@ -116,15 +116,14 @@ export class GetInformationFromSapienForSamirUseCase {
                 let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, parseInt(tarefaId))
                 // { beneficio: "teste", dibAnterior: "teste", beneficioAcumuladoBoolean: false, dibInicial: "teste", dip: "teste", id: parseInt(tarefaId), nb: "teste", rmi: "teste", tipo: "teste", numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao },
                 //console.log(informationsForCalculeDTO);
-                console.log("processo coletado");
+                // console.log("processo coletado");
+                // console.log(informationsForCalculeDTO);
                 if(isValidInformationsForCalculeDTO(informationsForCalculeDTO)){
                     response.push(informationsForCalculeDTO);
                     await updateEtiquetaUseCase.execute({ cookie, etiqueta: "LIDO BOOT", tarefaId })
                 }else{
                     await updateEtiquetaUseCase.execute({ cookie, etiqueta: "FALHA NA LEITURA DOS BENEFICIOS", tarefaId })
                 }
-                
-                // Ativar quando entrar em produção
                 
 
             }

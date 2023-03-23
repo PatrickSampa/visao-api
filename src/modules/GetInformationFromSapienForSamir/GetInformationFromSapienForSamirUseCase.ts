@@ -10,7 +10,7 @@ import { getDocumentoUseCase } from '../GetDocumento';
 import { updateEtiquetaUseCase } from '../UpdateEtiqueta';
 import { getXPathText } from "../../helps/GetTextoPorXPATH";
 import { coletarCitacao } from "./helps/coletarCitacao";
-import { VerificaçaoSeDosPrevInvalido } from "../../helps/verificaçaoSeDosPrevInvalido";
+import { VerificaçaoDaQuantidadeDeDiasParaInspirarODossie } from "../../helps/VerificaçaoDaQuantidadeDeDiasParaInspirarODossie";
 import { getInformaçoesIniciasDosBeneficios } from './helps/getInformaçoesIniciasDosBeneficios';
 import { getInformaçoesSecudariaDosBeneficios } from './helps/getInformaçoesSecudariaDosBeneficios';
 import { fazerInformationsForCalculeDTO } from './helps/contruirInformationsForCalcule';
@@ -83,8 +83,8 @@ export class GetInformationFromSapienForSamirUseCase {
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE", tarefaId }))
                     continue
                 }
-                // ative quando for para produçao
-                if (VerificaçaoSeDosPrevInvalido(informacaoDeCabeçalho)) {
+                // verifica se o dossie ja inspirou, se o VerificaçaoDaQuantidadeDeDiasParaInspirarODossie for negativo que dizer que ja inspirou
+                if (0 > VerificaçaoDaQuantidadeDeDiasParaInspirarODossie(informacaoDeCabeçalho)) {
                     console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE", tarefaId }))
                     continue
@@ -118,13 +118,13 @@ export class GetInformationFromSapienForSamirUseCase {
                 //console.log(informationsForCalculeDTO);
                 // console.log("processo coletado");
                 // console.log(informationsForCalculeDTO);
-                if(isValidInformationsForCalculeDTO(informationsForCalculeDTO)){
+                if (isValidInformationsForCalculeDTO(informationsForCalculeDTO)) {
                     response.push(informationsForCalculeDTO);
                     await updateEtiquetaUseCase.execute({ cookie, etiqueta: "LIDO BOOT", tarefaId })
-                }else{
+                } else {
                     await updateEtiquetaUseCase.execute({ cookie, etiqueta: "FALHA NA LEITURA DOS BENEFICIOS", tarefaId })
                 }
-                
+
 
             }
             return await response

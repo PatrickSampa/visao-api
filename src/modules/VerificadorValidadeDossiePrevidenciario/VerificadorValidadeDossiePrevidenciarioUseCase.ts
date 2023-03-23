@@ -5,13 +5,12 @@ import { ResponseArvoreDeDocumento } from "../../sapiensOperations/response/Resp
 import { getTarefaUseCase } from "../GetTarefa";
 import { getUsuarioUseCase } from "../GetUsuario";
 import { loginUseCase } from "../LoginUsuario";
-import { solicitarDossiePrevidenciarioUseCase } from '../SolicitarDossiePrevidenciario/index';
 import { updateEtiquetaUseCase } from "../UpdateEtiqueta";
 import { getArvoreDocumentoUseCase } from '../GetArvoreDocumento/index';
 import { coletarArvoreDeDocumentoDoPassivo } from "../GetInformationFromSapienForSamir/helps/coletarArvoreDeDocumentoDoPassivo";
 import { getDocumentoUseCase } from '../GetDocumento/index';
 import { getXPathText } from '../../helps/GetTextoPorXPATH';
-import { VerificaçaoSeDosPrevInvalido } from "../../helps/verificaçaoSeDosPrevInvalido";
+import { VerificaçaoDaQuantidadeDeDiasParaInspirarODossie } from "../../helps/VerificaçaoDaQuantidadeDeDiasParaInspirarODossie";
 
 export class VerificadorValidadeDossiePrevidenciarioUseCase {
 
@@ -85,14 +84,15 @@ export class VerificadorValidadeDossiePrevidenciarioUseCase {
                         continue
                     }
                     // ative quando for para produçao
-                    if (VerificaçaoSeDosPrevInvalido(informacaoDeCabeçalho)) {
+                    const diasParaInpirarDossie =  VerificaçaoDaQuantidadeDeDiasParaInspirarODossie(informacaoDeCabeçalho);
+                    if (0 > diasParaInpirarDossie) {
                         console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
                         (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE", tarefaId }))
                         continue
                     }
                     response.push("DOSPREV VALIDADO")
                     console.log("DOSPREV VALIDADO");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "PROCESSO VALIDADO", tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: ("PROCESSO VALIDADO POR " + diasParaInpirarDossie +" DIAS"), tarefaId }))
                 }
             } while (tarefas.length >= qunatidadeDeProcesso);
 

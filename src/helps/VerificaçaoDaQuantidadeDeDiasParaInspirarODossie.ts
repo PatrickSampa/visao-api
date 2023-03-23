@@ -1,5 +1,5 @@
 import { parse } from "date-fns";
-export function VerificaçaoSeDosPrevInvalido(dosPrev: string): boolean {
+export function VerificaçaoDaQuantidadeDeDiasParaInspirarODossie(dosPrev: string): number {
     //Exemplo: dosprev = * "Informações extraídas dos sistemas informatizados do INSS em: 10/08/2022 11:58:28"
     //Obtendo somente a data em string
     const dateString = dosPrev.split(": ")[1];
@@ -13,10 +13,5 @@ export function VerificaçaoSeDosPrevInvalido(dosPrev: string): boolean {
     // Converter a diferença de milisegundos para dias
     const differenceInDays = difference / (1000 * 60 * 60 * 24);
 
-    // Verificar se a diferença é maior que 30 dias
-    if (differenceInDays > 60) {
-        return true;
-    } else {
-        return false;
-    }
+    return 60 - Math.floor(differenceInDays);
 }

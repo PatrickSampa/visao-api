@@ -14,7 +14,7 @@ export function VerificaçaoSeDosPrevInvalido(dosPrev: string): boolean {
     const differenceInDays = difference / (1000 * 60 * 60 * 24);
 
     // Verificar se a diferença é maior que 30 dias
-    if (differenceInDays > 45) {
+    if (differenceInDays > 60) {
         return true;
     } else {
         return false;

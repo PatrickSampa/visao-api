@@ -10,7 +10,7 @@ import { getDocumentoUseCase } from '../GetDocumento';
 import { updateEtiquetaUseCase } from '../UpdateEtiqueta';
 import { getXPathText } from "../../helps/GetTextoPorXPATH";
 import { coletarCitacao } from "./helps/coletarCitacao";
-import { VerificaçaoSeDosPrevInvalido } from "./helps/verificaçaoSeDosPrevInvalido";
+import { VerificaçaoSeDosPrevInvalido } from "../../helps/verificaçaoSeDosPrevInvalido";
 import { getInformaçoesIniciasDosBeneficios } from './helps/getInformaçoesIniciasDosBeneficios';
 import { getInformaçoesSecudariaDosBeneficios } from './helps/getInformaçoesSecudariaDosBeneficios';
 import { fazerInformationsForCalculeDTO } from './helps/contruirInformationsForCalcule';

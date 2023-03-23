@@ -25,11 +25,11 @@ export class VerificadorValidadeDossiePrevidenciarioUseCase {
 
             let response: Array<any> = [];
             data.etiqueta = await data.etiqueta.toUpperCase()
-            const etiquetaInvalida = data.etiqueta.includes("FALHA") || data.etiqueta.includes("ATUALIZAÇAO")
+            const etiquetaInvalida = data.etiqueta.includes("PROCESSO") || data.etiqueta.includes("DOSPREV")
 
             if (etiquetaInvalida) {
                 console.log(etiquetaInvalida)
-                reject(new Error("etiqueta não pode ter as palavras falha e/ou atualizaçao"))
+                reject(new Error("etiqueta não pode ter as palavras PROCESSO e/ou DOSPREV"))
             }
             console.log("data.etiqueta", data.etiqueta, "usuario_id", usuario_id);
             const qunatidadeDeProcesso = 50;
@@ -90,8 +90,9 @@ export class VerificadorValidadeDossiePrevidenciarioUseCase {
                         (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE", tarefaId }))
                         continue
                     }
+                    response.push("DOSPREV VALIDADO")
                     console.log("DOSPREV VALIDADO");
-                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "PROCESSO VALIDADO", tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "PROCESSO VALIDADO", tarefaId }))
                 }
             } while (tarefas.length >= qunatidadeDeProcesso);
 

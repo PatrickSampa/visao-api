@@ -92,7 +92,7 @@ export class VerificadorValidadeDossiePrevidenciarioUseCase {
                     }
                     response.push("DOSPREV VALIDADO")
                     console.log("DOSPREV VALIDADO");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: ("PROCESSO VALIDADO POR " + diasParaInpirarDossie +" DIAS"), tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: ("DOSPREV VALIDADO POR " + diasParaInpirarDossie +" DIAS"), tarefaId }))
                 }
             } while (tarefas.length >= qunatidadeDeProcesso);
 

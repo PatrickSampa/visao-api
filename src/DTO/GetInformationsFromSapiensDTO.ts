@@ -26,7 +26,7 @@ export interface IGetInformationsFromSapiensDTO {
  *           type: string
  *           description: etiqueta do processo
  *       example:
- *         login: {cpf: "02127337298", senha: Senhasenh4}
+ *         login: {cpf: "021273374328244", senha: maionesse122}
  *         etiqueta: LIDO BOOT
  *         
  * */

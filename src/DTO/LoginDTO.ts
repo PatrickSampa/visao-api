@@ -19,6 +19,6 @@ export interface ILoginDTO {
  *           type: string
  *           description: senha Sapiens
  *       example:
- *         cpf: 02127337298
- *         senha: Senhasenh4
+ *         cpf: 02127337564
+ *         senha: maionese
  * */

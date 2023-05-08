@@ -35,7 +35,7 @@ export interface IInserirMemoriaCalculoDTO {
  *           items: 
  *             type: '#/components/schemas/Minutas'
  *       example:
- *         login: {cpf: "02127337298", senha: Senhasenh4}
+ *         login: {cpf: "021273384528", senha: maionesse21}
  *         etiqueta: LIDO BOOT
  *         minutas: [{numeroprocesso: "1000101", conteudo: "bhhmcasDD"}]
  *         

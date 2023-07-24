@@ -17,6 +17,7 @@ import { fazerInformationsForCalculeDTO } from './helps/contruirInformationsForC
 import { ResponseArvoreDeDocumento } from '../../sapiensOperations/response/ResponseArvoreDeDocumento';
 import { coletarArvoreDeDocumentoDoPassivo } from './helps/coletarArvoreDeDocumentoDoPassivo';
 import { isValidInformationsForCalculeDTO } from './helps/validadorDeInformationsForCalculeDTO';
+import { getCapaDoPassivaUseCase } from '../GetCapaDoPassiva';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -29,6 +30,7 @@ export class GetInformationFromSapienForSamirUseCase {
         const usuario = (await getUsuarioUseCase.execute(cookie));
 
         const usuario_id = `${usuario[0].id}`;
+        let novaCapa: any = false;
 
         let response: Array<IInformationsForCalculeDTO> = [];
         try {
@@ -61,6 +63,56 @@ export class GetInformationFromSapienForSamirUseCase {
                         continue;
                     }
                 }
+
+
+
+
+                //Verificar a capa caso exista outra capa com os dados necessários
+                const capaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);
+                const capaFormatada = new JSDOM(capaParaVerificar)
+                const xPathClasse = "/html/body/div/div[4]/table/tbody/tr[2]/td[1]"
+                const infoClasseExist = getXPathText(capaFormatada, xPathClasse) == "Classe:" 
+                if(!infoClasseExist){
+                    console.log(1)
+                    const xpathNovaNup = "/html/body/div/div[4]/table/tbody/tr[13]/td[2]/a[1]/b"
+                    const novaNup = getXPathText(capaFormatada, xpathNovaNup)
+                    const nupFormatada:string = (novaNup.split('(')[0]).replace(/[./-]/g, "").trim();
+                    const capa = (await getCapaDoPassivaUseCase.execute(nupFormatada, cookie));
+                    novaCapa = new JSDOM(capa)
+                }else{
+                    console.log(2)
+                    const capa = (await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
+                    novaCapa = new JSDOM(capa)
+                }
+                let BuscarPelaTjmg: any = false;
+                //Buscar pela sigla TJMG
+                const xpathDaSigla: Array<string> = ["/html/body/div/div[4]/table/tbody/tr[3]/td[2]", "/html/body/div/div[5]/table/tbody/tr[3]/td[2]/text()"]
+                for(let i=0; i<2; i++){
+                    let VerificarSeExisteTjmg = (getXPathText(novaCapa, xpathDaSigla[i]));
+                    if(VerificarSeExisteTjmg){
+                        if(VerificarSeExisteTjmg.split("(")[1]){
+                            if(((VerificarSeExisteTjmg.split("(")[1]).replace(/[)]/g, "").trim() === "TJMG") ){
+                                BuscarPelaTjmg = true;
+                            }
+                        }
+                        
+                        
+                    }
+
+                }
+
+                if(BuscarPelaTjmg){
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "PROCESSO TJMG", tarefaId }))
+                    continue;
+                }
+
+
+
+
+
+
+
+
 
                 const dosPrevSemIdParaPesquisa = (objectDosPrev.documentoJuntado.componentesDigitais.length) <= 0;
                 if (dosPrevSemIdParaPesquisa) {

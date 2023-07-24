@@ -23,9 +23,7 @@ import { getCapaDoPassivaUseCase } from '../GetCapaDoPassiva';
 export class GetInformationFromSapienForSamirUseCase {
 
     async execute(data: IGetInformationsFromSapiensDTO): Promise<any> {
-        // console.log("teste")
-        // const teste = await getUsuarioUseCase.execute("PHPSESSID:f29006e787410cd44bc088093391ba7b")
-        // console.log(teste)
+        
         const cookie = await loginUseCase.execute(data.login);
         const usuario = (await getUsuarioUseCase.execute(cookie));
 
@@ -39,6 +37,7 @@ export class GetInformationFromSapienForSamirUseCase {
             for (var i = 0; i <= tarefas.length - 1; i++) {
                 console.log("Qantidade faltando triar", (tarefas.length - i));
                 const tarefaId = tarefas[i].id;
+                const etiquetaParaConcatenar = tarefas[i].postIt
                 const objectGetArvoreDocumento: IGetArvoreDocumentoDTO = { nup: tarefas[i].pasta.NUP, chave: tarefas[i].pasta.chaveAcesso, cookie, tarefa_id: tarefas[i].id }
                 let arrayDeDocumentos: ResponseArvoreDeDocumento[];
 
@@ -49,9 +48,9 @@ export class GetInformationFromSapienForSamirUseCase {
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA GERAÇAO", tarefaId }));
                     continue
                 }
-
+                
                 var objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-
+                
                 var objectDosPrevNaoExisti = objectDosPrev == null;
                 if (objectDosPrevNaoExisti) {
                     arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
@@ -102,7 +101,7 @@ export class GetInformationFromSapienForSamirUseCase {
                 }
 
                 if(BuscarPelaTjmg){
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "PROCESSO TJMG", tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `PROCESSO TJMG - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue;
                 }
 
@@ -117,7 +116,7 @@ export class GetInformationFromSapienForSamirUseCase {
                 const dosPrevSemIdParaPesquisa = (objectDosPrev.documentoJuntado.componentesDigitais.length) <= 0;
                 if (dosPrevSemIdParaPesquisa) {
                     console.log("DOSPREV COM FALHA NA PESQUISA");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA PESQUISA", tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV COM FALHA NA PESQUISA - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue;
                 }
                 const idDosprevParaPesquisa = objectDosPrev.documentoJuntado.componentesDigitais[0].id;
@@ -132,20 +131,20 @@ export class GetInformationFromSapienForSamirUseCase {
                 const informacaoDeCabeçalhoNaoExiste = !informacaoDeCabeçalho;
                 if (informacaoDeCabeçalhoNaoExiste) {
                     console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE", tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE$ - {etiquetaParaConcatenar}`, tarefaId }))
                     continue
                 }
                 // verifica se o dossie ja inspirou, se o VerificaçaoDaQuantidadeDeDiasParaInspirarODossie for negativo que dizer que ja inspirou
                 if (0 > VerificaçaoDaQuantidadeDeDiasParaInspirarODossie(informacaoDeCabeçalho)) {
                     console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE", tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue
                 }
 
                 var beneficios = await getInformaçoesIniciasDosBeneficios(parginaDosPrevFormatada)
                 if (beneficios.length <= 0) {
                     console.log("DOSPREV SEM BENEFICIO VALIDOS");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV SEM BENEFICIOS VALIDOS", tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV SEM BENEFICIOS VALIDOS - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue
                 }
                 beneficios = await getInformaçoesSecudariaDosBeneficios(beneficios, parginaDosPrevFormatada)
@@ -172,9 +171,9 @@ export class GetInformationFromSapienForSamirUseCase {
                 // console.log(informationsForCalculeDTO);
                 if (isValidInformationsForCalculeDTO(informationsForCalculeDTO)) {
                     response.push(informationsForCalculeDTO);
-                    await updateEtiquetaUseCase.execute({ cookie, etiqueta: "LIDO BOOT", tarefaId })
+                    await updateEtiquetaUseCase.execute({ cookie, etiqueta: `LIDO BOT - ${etiquetaParaConcatenar}`, tarefaId })
                 } else {
-                    await updateEtiquetaUseCase.execute({ cookie, etiqueta: "FALHA NA LEITURA DOS BENEFICIOS", tarefaId })
+                    await updateEtiquetaUseCase.execute({ cookie, etiqueta: `FALHA NA LEITURA DOS BENEFICIOS - ${etiquetaParaConcatenar}`, tarefaId })
                 }
 
 

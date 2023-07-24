@@ -36,7 +36,7 @@ function preencherBeneficioPrincipal(result: IInformationsForCalculeDTO, benefic
 async function converterArrayDeBenefiosParaArrayDeBeneficiosAcumulados(beneficios: IBeneficiosDTO[]): Promise<IBeneficiosAcumuladoForCalculeDTO[]>{
     var beneficiosAcumulados: IBeneficiosAcumuladoForCalculeDTO[] = [];
     for(let beneficio of beneficios){
-        beneficiosAcumulados.push({ beneficio: beneficio.beneficio, dcb: beneficio.dcb, dib: beneficio.dib, rmi: beneficio.rmi })
+        beneficiosAcumulados.push({ beneficio: beneficio.beneficio, dcb: beneficio.dcb, dib: beneficio.dib, rmi: beneficio.rmi, nb: beneficio.nb })
     }
     return await beneficiosAcumulados;
 }

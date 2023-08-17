@@ -1,7 +1,7 @@
-export class RequestGetTarefa {
-    async execute(idUsuario: string, etiqueta?: string, processoJudicial?: string, qunatidadeDeProcesso?: number): Promise<string> {
+export class RequestGetTarefaNup {
+    async executeMerda(idUsuario: string, nup: string ,processoJudicial?: string, qunatidadeDeProcesso?: number): Promise<string> {
+        console.log("ENTROU NESSE")
         let filter = "";
-
         if(qunatidadeDeProcesso == 0 || qunatidadeDeProcesso == null){
             qunatidadeDeProcesso = 50;
         }
@@ -13,16 +13,11 @@ export class RequestGetTarefa {
         }
 
 
-        if(!(etiqueta == null || etiqueta == "")){
-            etiqueta = `{"type":"string","value":"${etiqueta}","field":"postIt"}`;
-        }else{
-            etiqueta = "";
-        }
+        
 
-        if((!(etiqueta == null || etiqueta == "")) || !(processoJudicial == null || processoJudicial == "")){
-            filter =`"gridfilter":[${processoJudicial}${(etiqueta != "" && processoJudicial != "")? "," : ""} ${etiqueta}],`
+        if((!(nup == null || nup == "")) || !(processoJudicial == null || processoJudicial == "")){
+            filter =`"gridfilter":[ {"type":"string","value":"${nup}","field":"pasta.NUP"}],`
         }
-        console.log(filter)
         const getTarefa = `{
             "action": "SapiensAdministrativo_Tarefa",
             "method": "getTarefa",
@@ -79,7 +74,6 @@ export class RequestGetTarefa {
             "type": "rpc",
             "tid": 2
         }`
-        
         return getTarefa;
     }
 }

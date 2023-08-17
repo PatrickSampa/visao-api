@@ -3,6 +3,7 @@ import { ILoginDTO } from "./LoginDTO";
 export interface IGetInformationsFromSapiensDTO {
     login: ILoginDTO;
     etiqueta: string;
+    usuario_id: string;
 }
 
 

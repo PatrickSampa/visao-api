@@ -18,6 +18,7 @@ import { ResponseArvoreDeDocumento } from '../../sapiensOperations/response/Resp
 import { coletarArvoreDeDocumentoDoPassivo } from './helps/coletarArvoreDeDocumentoDoPassivo';
 import { isValidInformationsForCalculeDTO } from './helps/validadorDeInformationsForCalculeDTO';
 import { getCapaDoPassivaUseCase } from '../GetCapaDoPassiva';
+import { getTarefaUseCaseNup } from '../GetTarefaNup';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -33,7 +34,8 @@ export class GetInformationFromSapienForSamirUseCase {
         let response: Array<IInformationsForCalculeDTO> = [];
         try {
             const tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
-
+            /* const tarefas = await getTarefaUseCaseNup.execute({ cookie, usuario_id, nup: data.nup }); */
+            
             for (var i = 0; i <= tarefas.length - 1; i++) {
                 console.log("Qantidade faltando triar", (tarefas.length - i));
                 const tarefaId = tarefas[i].id;

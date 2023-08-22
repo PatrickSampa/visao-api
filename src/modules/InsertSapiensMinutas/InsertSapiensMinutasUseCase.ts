@@ -11,6 +11,7 @@ import { updateEtiquetaUseCase } from '../UpdateEtiqueta';
 export class InsertSapiensMinutasUseCase {
 
     async execute(data: IInserirMemoriaCalculoDTO): Promise<any> {
+        console.log(data.minutas[0].nup);
         const cookie = await loginUseCase.execute(data.login);
         const usuario = (await getUsuarioUseCase.execute(cookie));
         const usuario_id = `${usuario[0].id}`;
@@ -21,7 +22,7 @@ export class InsertSapiensMinutasUseCase {
         let response: Array<any> = [];
         console.log("data.etiqueta", data.etiqueta, "usuario_id", usuario_id);
         const tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta})
-        //console.log(tarefas[0].pasta.processoJudicial.numero);
+   
 
         for (var i = 0; i < tarefas.length; i++) {
             console.log("i tarefas anexar: " + i);

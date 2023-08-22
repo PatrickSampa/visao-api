@@ -1,6 +1,7 @@
 export interface IMinutasDTO {
     numeroprocesso: string, 
-    conteudo: string
+    conteudo: string,
+    nup: string
 }
 
 /**

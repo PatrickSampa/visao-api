@@ -20,7 +20,7 @@ export class InsertSapiensMinutasUseCase {
         var tidNumber = 3;
         const minutas = data.minutas;
         let response: Array<any> = [];
-        console.log("data.etiqueta", data.etiqueta, "usuario_id", usuario_id);
+
         const tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta})
    
 

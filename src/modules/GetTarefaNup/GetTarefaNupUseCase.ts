@@ -9,7 +9,7 @@ export class GetTarefaNupUseCase {
   
         const getTarefa = await this.RequestGetTarefaNup.executeMerda(data.usuario_id, data.nup, data.processoJudicial ,data.qunatidadeDeProcesso);
         
-        console.log(getTarefa)
+        
         const response = (await RequestSapiens(data.cookie, getTarefa))
 
         return response;

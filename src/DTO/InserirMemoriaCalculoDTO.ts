@@ -3,7 +3,7 @@ import { IMinutasDTO } from "./MinutaDTO";
 
 export interface IInserirMemoriaCalculoDTO {
     login: ILoginDTO;
-    etiqueta: string;
+    nup: string;
     minutas: Array<IMinutasDTO>;
 }
 

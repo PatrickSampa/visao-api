@@ -30,7 +30,7 @@ export class GetInformationFromSapienForSamirUseCase {
 
         const usuario_id = `${usuario[0].id}`;
         let novaCapa: any = false;
-
+        var objectDosPrev
         let response: Array<IInformationsForCalculeDTO> = [];
         try {
             const tarefas = await getTarefaUseCase.execute({ cookie, usuario_id, etiqueta: data.etiqueta });
@@ -51,22 +51,8 @@ export class GetInformationFromSapienForSamirUseCase {
                     continue
                 }
                 
-                var objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                
-                var objectDosPrevNaoExisti = objectDosPrev == null;
-                if (objectDosPrevNaoExisti) {
-                    arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
-                    objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                    objectDosPrevNaoExisti = objectDosPrev == null;
-                    if (objectDosPrevNaoExisti) {
-                        console.log("DOSPREV NÃO ECONTRADO");
-                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
-                        continue;
-                    }
-                }
-
-
-
+                objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                var teste = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
 
                 //Verificar a capa caso exista outra capa com os dados necessários
                 const capaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);
@@ -108,9 +94,38 @@ export class GetInformationFromSapienForSamirUseCase {
                 }
 
 
+                //Buscar cpf para verificação
+                let contadorXpath = 0;
+                let cpfCapa;
+                while(true){
+                    let linhaExist = (getXPathText(novaCapa, `html/body/div/div[6]/table/tbody/tr[${contadorXpath}]`))
+                    if(linhaExist){
+                        const verificarLinhaPoloAtivo = linhaExist.indexOf("PÓLO ATIVO")
+                        if(verificarLinhaPoloAtivo != -1){
+                            cpfCapa = (linhaExist.split(/[()]/)[1]).replaceAll(/[.-]/g, "");
+                            console.log(cpfCapa)
+                            break
+                        }
+        
+                        
+                    }
+                    contadorXpath++;
+                }
+                
 
 
 
+                var objectDosPrevNaoExisti = objectDosPrev == null;
+                if (objectDosPrevNaoExisti) {
+                    arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
+                    objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                    objectDosPrevNaoExisti = objectDosPrev == null;
+                    if (objectDosPrevNaoExisti) {
+                        console.log("DOSPREV NÃO ECONTRADO");
+                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
+                        continue;
+                    }
+                }
 
 
 

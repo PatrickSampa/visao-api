@@ -52,7 +52,7 @@ export class GetInformationFromSapienForSamirUseCase {
                 }
                 
                 objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                var teste = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                var objectDosPrev2 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
 
                 //Verificar a capa caso exista outra capa com os dados necessários
                 const capaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);
@@ -60,14 +60,14 @@ export class GetInformationFromSapienForSamirUseCase {
                 const xPathClasse = "/html/body/div/div[4]/table/tbody/tr[2]/td[1]"
                 const infoClasseExist = getXPathText(capaFormatada, xPathClasse) == "Classe:" 
                 if(!infoClasseExist){
-                    console.log(1)
+             
                     const xpathNovaNup = "/html/body/div/div[4]/table/tbody/tr[13]/td[2]/a[1]/b"
                     const novaNup = getXPathText(capaFormatada, xpathNovaNup)
                     const nupFormatada:string = (novaNup.split('(')[0]).replace(/[./-]/g, "").trim();
                     const capa = (await getCapaDoPassivaUseCase.execute(nupFormatada, cookie));
                     novaCapa = new JSDOM(capa)
                 }else{
-                    console.log(2)
+                    
                     const capa = (await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie));
                     novaCapa = new JSDOM(capa)
                 }
@@ -103,7 +103,7 @@ export class GetInformationFromSapienForSamirUseCase {
                         const verificarLinhaPoloAtivo = linhaExist.indexOf("PÓLO ATIVO")
                         if(verificarLinhaPoloAtivo != -1){
                             cpfCapa = (linhaExist.split(/[()]/)[1]).replaceAll(/[.-]/g, "");
-                            console.log(cpfCapa)
+                            
                             break
                         }
         
@@ -111,21 +111,33 @@ export class GetInformationFromSapienForSamirUseCase {
                     }
                     contadorXpath++;
                 }
-                
 
-
-
-                var objectDosPrevNaoExisti = objectDosPrev == null;
-                if (objectDosPrevNaoExisti) {
-                    arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
-                    objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                    objectDosPrevNaoExisti = objectDosPrev == null;
+                if(objectDosPrev2.length === 0) {
+                    var objectDosPrevNaoExisti = objectDosPrev == null;
                     if (objectDosPrevNaoExisti) {
-                        console.log("DOSPREV NÃO ECONTRADO");
-                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
-                        continue;
+                        arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
+                        objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                        objectDosPrevNaoExisti = objectDosPrev == null;
+                        if (objectDosPrevNaoExisti) {
+                            console.log("DOSPREV NÃO ECONTRADO");
+                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
+                            continue;
+                        }
+                    }
+                } else{
+                    for(let i = 0; i < objectDosPrev2.length; i++){
+                        let id = objectDosPrev2[i].documentoJuntado.componentesDigitais[0].id;
+                        let parginaDosPrevParaVerificar = await getDocumentoUseCase.execute({ cookie, idDocument: id });
+                        let parginaDosPrevFormatadaParaVerificacao = new JSDOM(parginaDosPrevParaVerificar);
+                        let informacaoDeCabeçalhoParaVerificar = getXPathText(parginaDosPrevFormatadaParaVerificacao, `html/body/div/div[1]/table/tbody/tr[7]/td`);
+                  
+                        if(informacaoDeCabeçalhoParaVerificar === cpfCapa){
+                            objectDosPrev = objectDosPrev2[i];
+                        }
                     }
                 }
+                
+               
 
 
 

@@ -112,7 +112,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     contadorXpath++;
                 }
 
-                if(objectDosPrev2.length === 0) {
+                /* if(objectDosPrev2.length === 0) {
                     var objectDosPrevNaoExisti = objectDosPrev == null;
                     if (objectDosPrevNaoExisti) {
                         arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
@@ -135,7 +135,7 @@ export class GetInformationFromSapienForSamirUseCase {
                             objectDosPrev = objectDosPrev2[i];
                         }
                     }
-                }
+                } */
                 
                
 

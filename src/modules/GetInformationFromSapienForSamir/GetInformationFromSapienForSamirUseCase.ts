@@ -19,6 +19,7 @@ import { coletarArvoreDeDocumentoDoPassivo } from './helps/coletarArvoreDeDocume
 import { isValidInformationsForCalculeDTO } from './helps/validadorDeInformationsForCalculeDTO';
 import { getCapaDoPassivaUseCase } from '../GetCapaDoPassiva';
 import { getTarefaUseCaseNup } from '../GetTarefaNup';
+import { ErrogetArvoreDocumentoUseCase } from '../GetArvoreDocumentoErroProcesso';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -50,9 +51,53 @@ export class GetInformationFromSapienForSamirUseCase {
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA GERAÇAO", tarefaId }));
                     continue
                 }
+
+
+
+
+
+
+
+
+
+                const tcapaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);
+                const tcapaFormatada = new JSDOM(tcapaParaVerificar)
+                const txPathClasse = "/html/body/div/div[4]/table/tbody/tr[2]/td[1]"
+                const tinfoClasseExist = getXPathText(tcapaFormatada, txPathClasse) == "Classe:"
+
+
                 
-                objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                var objectDosPrev2 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+
+
+                if(tinfoClasseExist){
+                    console.log("if")
+                    objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                    var objectDosPrev2 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                } else{
+                    console.log("else")
+                    const capaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);
+                    const capaFormatada = new JSDOM(capaParaVerificar)
+                    const xpathNovaNup = "/html/body/div/div[4]/table/tbody/tr[13]/td[2]/a[1]/b"
+                    const novaNup = getXPathText(capaFormatada, xpathNovaNup)
+                    const novoObjectGetArvoreDocumento: IGetArvoreDocumentoDTO = { nup: novaNup, chave: tarefas[i].pasta.chaveAcesso, cookie, tarefa_id: tarefas[i].id }
+                    try {
+                        const novaNupTratada = novaNup.split("(")[0].trim().replace(/[-/.]/g, "")
+                        novoObjectGetArvoreDocumento.nup = novaNupTratada
+                        arrayDeDocumentos = (await getArvoreDocumentoUseCase.execute(novoObjectGetArvoreDocumento)).reverse();
+                        objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                    } catch (error) {
+                        console.log(error);
+                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA GERAÇAO", tarefaId }));
+                        continue
+                    }
+                }
+
+
+                
+
+
+
+                
 
                 //Verificar a capa caso exista outra capa com os dados necessários
                 const capaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);

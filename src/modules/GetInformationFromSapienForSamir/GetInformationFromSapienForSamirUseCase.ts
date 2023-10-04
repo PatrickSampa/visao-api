@@ -21,6 +21,7 @@ import { getCapaDoPassivaUseCase } from '../GetCapaDoPassiva';
 import { getTarefaUseCaseNup } from '../GetTarefaNup';
 import { ErrogetArvoreDocumentoUseCase } from '../GetArvoreDocumentoErroProcesso';
 import { verificarCapaTrue } from './helps/verificarCapaTrue';
+import { buscarTableCpf } from './helps/procurarTableCpf';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -64,10 +65,11 @@ export class GetInformationFromSapienForSamirUseCase {
                 const tcapaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);
                 const tcapaFormatada = new JSDOM(tcapaParaVerificar)
                 const txPathClasse = "/html/body/div/div[4]/table/tbody/tr[2]/td[1]"
-                const tinfoClasseExist = getXPathText(tcapaFormatada, txPathClasse) == "Classe:"
+                //const tinfoClasseExist = getXPathText(tcapaFormatada, txPathClasse) == "Classe:"
+                
+                const tinfoClasseExist = await verificarCapaTrue(tcapaFormatada)
 
-
-                console.log("EXISTE CLASSE: ", await verificarCapaTrue(tcapaFormatada))
+                
 
 
                 if(tinfoClasseExist){
@@ -103,8 +105,8 @@ export class GetInformationFromSapienForSamirUseCase {
                 //Verificar a capa caso exista outra capa com os dados necessários
                 const capaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);
                 const capaFormatada = new JSDOM(capaParaVerificar)
-                const xPathClasse = "/html/body/div/div[4]/table/tbody/tr[2]/td[1]"
-                const infoClasseExist = getXPathText(capaFormatada, xPathClasse) == "Classe:" 
+                //const xPathClasse = "/html/body/div/div[4]/table/tbody/tr[2]/td[1]"
+                const infoClasseExist = await verificarCapaTrue(capaFormatada) 
                 if(!infoClasseExist){
              
                     const xpathNovaNup = "/html/body/div/div[4]/table/tbody/tr[13]/td[2]/a[1]/b"
@@ -138,51 +140,17 @@ export class GetInformationFromSapienForSamirUseCase {
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `PROCESSO TJMG - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue;
                 }
-
+                
 
                 //Buscar cpf para verificação
-                let contadorXpath = 0;
-                let cpfCapa;
-                while(true){
-                    let linhaExist = (getXPathText(novaCapa, `html/body/div/div[6]/table/tbody/tr[${contadorXpath}]`))
-                    if(linhaExist){
-                        const verificarLinhaPoloAtivo = linhaExist.indexOf("PÓLO ATIVO")
-                        if(verificarLinhaPoloAtivo != -1){
-                            cpfCapa = (linhaExist.split(/[()]/)[1]).replaceAll(/[.-]/g, "");
-                            
-                            break
-                        }
-        
-                        
-                    }
-                    contadorXpath++;
+              
+                const cpfCapa = buscarTableCpf(novaCapa);
+                if(!cpfCapa){
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `CPF NÃO ENCONTRADO`, tarefaId }))
+                    continue;
                 }
 
-                /* if(objectDosPrev2.length === 0) {
-                    var objectDosPrevNaoExisti = objectDosPrev == null;
-                    if (objectDosPrevNaoExisti) {
-                        arrayDeDocumentos = await coletarArvoreDeDocumentoDoPassivo(objectGetArvoreDocumento)
-                        objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                        objectDosPrevNaoExisti = objectDosPrev == null;
-                        if (objectDosPrevNaoExisti) {
-                            console.log("DOSPREV NÃO ECONTRADO");
-                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ECONTRADO", tarefaId }))
-                            continue;
-                        }
-                    }
-                } else{
-                    for(let i = 0; i < objectDosPrev2.length; i++){
-                        let id = objectDosPrev2[i].documentoJuntado.componentesDigitais[0].id;
-                        let parginaDosPrevParaVerificar = await getDocumentoUseCase.execute({ cookie, idDocument: id });
-                        let parginaDosPrevFormatadaParaVerificacao = new JSDOM(parginaDosPrevParaVerificar);
-                        let informacaoDeCabeçalhoParaVerificar = getXPathText(parginaDosPrevFormatadaParaVerificacao, `html/body/div/div[1]/table/tbody/tr[7]/td`);
-                  
-                        if(informacaoDeCabeçalhoParaVerificar === cpfCapa){
-                            objectDosPrev = objectDosPrev2[i];
-                        }
-                    }
-                } */
-                
+                console.log(cpfCapa)
                
 
 

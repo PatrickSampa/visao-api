@@ -9,7 +9,9 @@
     "start:docker:dev": "yarn && tsnd --transpile-only --respawn --ignore-watch node_modules src/server.ts"
   },
   "dependencies": {
+    "@types/cors": "^2.8.14",
     "@types/helmet": "^4.0.0",
+    "@types/morgan": "^1.9.6",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "date-fns": "^2.29.3",

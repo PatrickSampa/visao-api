@@ -20,6 +20,7 @@ import { isValidInformationsForCalculeDTO } from './helps/validadorDeInformation
 import { getCapaDoPassivaUseCase } from '../GetCapaDoPassiva';
 import { getTarefaUseCaseNup } from '../GetTarefaNup';
 import { ErrogetArvoreDocumentoUseCase } from '../GetArvoreDocumentoErroProcesso';
+import { verificarCapaTrue } from './helps/verificarCapaTrue';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -66,7 +67,7 @@ export class GetInformationFromSapienForSamirUseCase {
                 const tinfoClasseExist = getXPathText(tcapaFormatada, txPathClasse) == "Classe:"
 
 
-                
+                console.log("EXISTE CLASSE: ", await verificarCapaTrue(tcapaFormatada))
 
 
                 if(tinfoClasseExist){

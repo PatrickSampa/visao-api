@@ -30,7 +30,7 @@ export class GetInformationFromSapienForSamirUseCase {
         
         const cookie = await loginUseCase.execute(data.login);
         const usuario = (await getUsuarioUseCase.execute(cookie));
-
+        
         const usuario_id = `${usuario[0].id}`;
         let novaCapa: any = false;
         var objectDosPrev

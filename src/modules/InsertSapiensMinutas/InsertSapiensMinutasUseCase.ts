@@ -23,7 +23,7 @@ export class InsertSapiensMinutasUseCase {
         let response: Array<any> = [];
         for(let k= 0; k<data.minutas.length; k++){
             const tarefas = await getTarefaUseCaseNup.execute({ cookie, usuario_id, nup: data.minutas[k].nup})
-            console.log(data.minutas.length)
+            
 
 
             for (var i = 0; i < tarefas.length; i++) {
@@ -49,7 +49,7 @@ export class InsertSapiensMinutasUseCase {
                 const pasta_id = `${tarefas[i].pasta.id}`;
                 const usuario_setor = `${tarefas[i].setorResponsavel_id}`
                 const tid = `${tidNumber}`;
-                tarefas[i].postIt = "MEMÓRIA DE CALCULO INSERIDA NA MINUTA";
+                //tarefas[i].postIt = "MEMÓRIA DE CALCULO INSERIDA NA MINUTA";
                 tarefas[i].tid = tidNumber;
                 
                 processoAfazer = minutas.find(minuta => minuta.numeroprocesso == processo);
@@ -75,7 +75,8 @@ export class InsertSapiensMinutasUseCase {
                     let nome = await processo.split(" ");
                     const upload = await uploadDocumentUseCase.execute(cookie, `${nome[0]}${documento_id}MemoriaCalculo.html`, processoAfazer.conteudo, documento_id, tipo_documento);
                     await response.push({ createDocument: createDocument[0], upload });
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "MEMORIA ANEXADA", tarefaId: parseInt(tarefa_id) }));
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `MEMORIA ANEXADA - ${tarefas[i].postIt}`, tarefaId: parseInt(tarefa_id) }));
+                    console.log(tarefas[i])
                     tidNumber++;
                 }
 

@@ -27,8 +27,9 @@ import { buscarTableCpf } from './helps/procurarTableCpf';
 export class GetInformationFromSapienForSamirUseCase {
 
     async execute(data: IGetInformationsFromSapiensDTO): Promise<any> {
-        
+        console.log("SADSADAS " + JSON.stringify(data))
         const cookie = await loginUseCase.execute(data.login);
+        console.log("Login " + cookie)
         const usuario = (await getUsuarioUseCase.execute(cookie));
         
         const usuario_id = `${usuario[0].id}`;

@@ -76,15 +76,16 @@ export class GetInformationFromSapienForSamirUseCase {
                 if(tinfoClasseExist){
                     console.log("if") 
                     objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                    //var objectDosPrev2 = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "OUTROS");
+
                     var objectDosPrev2 = arrayDeDocumentos.find(Documento => {
                         const movimento = (Documento.movimento).split(".");
                         return movimento[0] == "JUNTADA DOSSIE DOSSIE PREVIDENCIARIO REF";
                     });
+
                     if(objectDosPrev.numeracaoSequencial < objectDosPrev2.numeracaoSequencial){
                         objectDosPrev = objectDosPrev2;
                     }
-                    console.log(objectDosPrev)
+
                 } else{
                     console.log("else")
                     const capaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);

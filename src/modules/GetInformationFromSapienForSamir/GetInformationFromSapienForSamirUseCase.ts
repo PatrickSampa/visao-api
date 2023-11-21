@@ -74,9 +74,17 @@ export class GetInformationFromSapienForSamirUseCase {
 
 
                 if(tinfoClasseExist){
-                    console.log("if")
+                    console.log("if") 
                     objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
-                    var objectDosPrev2 = arrayDeDocumentos.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+                    //var objectDosPrev2 = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "OUTROS");
+                    var objectDosPrev2 = arrayDeDocumentos.find(Documento => {
+                        const movimento = (Documento.movimento).split(".");
+                        return movimento[0] == "JUNTADA DOSSIE DOSSIE PREVIDENCIARIO REF";
+                    });
+                    if(objectDosPrev.numeracaoSequencial < objectDosPrev2.numeracaoSequencial){
+                        objectDosPrev = objectDosPrev2;
+                    }
+                    console.log(objectDosPrev)
                 } else{
                     console.log("else")
                     const capaParaVerificar: string = await getCapaDoPassivaUseCase.execute(tarefas[i].pasta.NUP, cookie);
@@ -84,11 +92,19 @@ export class GetInformationFromSapienForSamirUseCase {
                     const xpathNovaNup = "/html/body/div/div[4]/table/tbody/tr[13]/td[2]/a[1]/b"
                     const novaNup = getXPathText(capaFormatada, xpathNovaNup)
                     const novoObjectGetArvoreDocumento: IGetArvoreDocumentoDTO = { nup: novaNup, chave: tarefas[i].pasta.chaveAcesso, cookie, tarefa_id: tarefas[i].id }
-                    try {
+                    try { 
                         const novaNupTratada = novaNup.split("(")[0].trim().replace(/[-/.]/g, "")
                         novoObjectGetArvoreDocumento.nup = novaNupTratada
                         arrayDeDocumentos = (await getArvoreDocumentoUseCase.execute(novoObjectGetArvoreDocumento)).reverse();
                         objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
+
+                        var objectDosPrev2 = arrayDeDocumentos.find(Documento => {
+                            const movimento = (Documento.movimento).split(".");
+                            return movimento[0] == "JUNTADA DOSSIE DOSSIE PREVIDENCIARIO REF";
+                        });
+                        if(objectDosPrev.numeracaoSequencial < objectDosPrev2.numeracaoSequencial){
+                            objectDosPrev = objectDosPrev2;
+                        }
                     } catch (error) {
                         console.log(error);
                         (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA GERAÇAO", tarefaId }));
@@ -173,7 +189,7 @@ export class GetInformationFromSapienForSamirUseCase {
                 const informacaoDeCabeçalho = getXPathText(parginaDosPrevFormatada, xpathInformacaoDeCabeçalho);
                 console.log("informacaoDeCabeçalho", informacaoDeCabeçalho)
                 const informacaoDeCabeçalhoNaoExiste = !informacaoDeCabeçalho;
-                /* if (informacaoDeCabeçalhoNaoExiste) {
+                if (informacaoDeCabeçalhoNaoExiste) {
                     console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE$ - {etiquetaParaConcatenar}`, tarefaId }))
                     continue
@@ -183,7 +199,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue
-                } */
+                }
 
                 var beneficios = await getInformaçoesIniciasDosBeneficios(parginaDosPrevFormatada)
                 if (beneficios.length <= 0) {

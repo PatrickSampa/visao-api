@@ -22,6 +22,9 @@ import { getTarefaUseCaseNup } from '../GetTarefaNup';
 import { ErrogetArvoreDocumentoUseCase } from '../GetArvoreDocumentoErroProcesso';
 import { verificarCapaTrue } from './helps/verificarCapaTrue';
 import { buscarTableCpf } from './helps/procurarTableCpf';
+import { superDossie } from './DossieSuperSapiens';
+import { MinhaErroPersonalizado } from './helps/ErrorMensage';
+import { json } from 'express';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -42,6 +45,7 @@ export class GetInformationFromSapienForSamirUseCase {
             
             for (var i = 0; i <= tarefas.length - 1; i++) {
                 console.log("Qantidade faltando triar", (tarefas.length - i));
+                let superDosprevExist = false;
                 const tarefaId = tarefas[i].id;
                 const etiquetaParaConcatenar = tarefas[i].postIt
                 const objectGetArvoreDocumento: IGetArvoreDocumentoDTO = { nup: tarefas[i].pasta.NUP, chave: tarefas[i].pasta.chaveAcesso, cookie, tarefa_id: tarefas[i].id }
@@ -74,17 +78,27 @@ export class GetInformationFromSapienForSamirUseCase {
 
 
                 if(tinfoClasseExist){
-                    console.log("if") 
+
                     objectDosPrev = arrayDeDocumentos.find(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "DOSPREV");
 
                     var objectDosPrev2 = arrayDeDocumentos.find(Documento => {
                         const movimento = (Documento.movimento).split(".");
                         return movimento[0] == "JUNTADA DOSSIE DOSSIE PREVIDENCIARIO REF";
                     });
-
-                    if(objectDosPrev.numeracaoSequencial < objectDosPrev2.numeracaoSequencial){
+                    
+                    if(objectDosPrev == undefined && objectDosPrev2 == undefined){
+                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ENCONTRADO", tarefaId }));
+                        continue
+                    }else if(objectDosPrev2 != undefined && objectDosPrev == undefined){
                         objectDosPrev = objectDosPrev2;
+                        superDosprevExist = true;
+                    }else if(objectDosPrev != undefined &&  objectDosPrev2 != undefined){
+                        if(objectDosPrev.numeracaoSequencial < objectDosPrev2.numeracaoSequencial){
+                            objectDosPrev = objectDosPrev2;
+                            superDosprevExist = true;
+                        }
                     }
+
 
                 } else{
                     console.log("else")
@@ -103,9 +117,22 @@ export class GetInformationFromSapienForSamirUseCase {
                             const movimento = (Documento.movimento).split(".");
                             return movimento[0] == "JUNTADA DOSSIE DOSSIE PREVIDENCIARIO REF";
                         });
-                        if(objectDosPrev.numeracaoSequencial < objectDosPrev2.numeracaoSequencial){
+
+
+                        if(objectDosPrev.numeracaoSequencial == undefined && objectDosPrev2.numeracaoSequencial == undefined){
+                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ENCONTRADO", tarefaId }));
+                            continue
+                        }else if(objectDosPrev2.numeracaoSequencial != undefined && objectDosPrev.numeracaoSequencial == undefined){
                             objectDosPrev = objectDosPrev2;
+                            superDosprevExist = true;
+                        }else if(objectDosPrev.numeracaoSequencial != undefined &&  objectDosPrev2.numeracaoSequencial != undefined){
+                            if(objectDosPrev.numeracaoSequencial < objectDosPrev2.numeracaoSequencial){
+                                objectDosPrev = objectDosPrev2;
+                                superDosprevExist = true;
+                            }
                         }
+
+
                     } catch (error) {
                         console.log(error);
                         (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA GERAÇAO", tarefaId }));
@@ -184,15 +211,31 @@ export class GetInformationFromSapienForSamirUseCase {
                 const parginaDosPrev = await getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
 
                 const parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
+                
+                if(superDosprevExist){
+                    try{
+                        const teste =  await superDossie.handle(parginaDosPrevFormatada);
+                        console.log("TETETETETETEET " + JSON.stringify(teste))
 
+                    }catch(e){
+                        if(e instanceof MinhaErroPersonalizado && e.message == "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE"){
+                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE - ${etiquetaParaConcatenar}`, tarefaId }))
+                            continue
+                        }
+                        if(e instanceof MinhaErroPersonalizado && e.message == "DOSPREV SEM BENEFICIO VALIDOS"){
+                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV SEM BENEFICIO VALIDOS - ${etiquetaParaConcatenar}`, tarefaId }))
+                            continue
+                        }
+                    }
+                }
 
-                const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]"
+                /* const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]"
                 const informacaoDeCabeçalho = getXPathText(parginaDosPrevFormatada, xpathInformacaoDeCabeçalho);
                 console.log("informacaoDeCabeçalho", informacaoDeCabeçalho)
                 const informacaoDeCabeçalhoNaoExiste = !informacaoDeCabeçalho;
                 if (informacaoDeCabeçalhoNaoExiste) {
                     console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE$ - {etiquetaParaConcatenar}`, tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue
                 }
                 // verifica se o dossie ja inspirou, se o VerificaçaoDaQuantidadeDeDiasParaInspirarODossie for negativo que dizer que ja inspirou
@@ -200,7 +243,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue
-                }
+                } */
 
                 var beneficios = await getInformaçoesIniciasDosBeneficios(parginaDosPrevFormatada)
                 if (beneficios.length <= 0) {

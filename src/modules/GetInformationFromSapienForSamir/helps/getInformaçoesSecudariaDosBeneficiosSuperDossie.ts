@@ -6,7 +6,6 @@ import { getXPathText } from "../../../helps/GetTextoPorXPATH";
 export async function getInformaçoesSecudariaDosBeneficiosSuperDossie(beneficios: IBeneficiosDTO[], paginaHTML_DOSPREV_Formatada: any): Promise<IBeneficiosDTO[]> {
     const numeroMaximoParaProcurarAPosiçaoDasDivDaTabelaDeBeneficio = 20;
     const numeroInicialParaProcurarAPosiçaoDasDivDaTabelaDeBeneficio = 1;
-
     const numeroMaxioParaProcurarATabelaDoBeneeficio = 50;
     const numeroInicialParaProcurarATabelaDoBeneeficio = 1;
     for (let idexDoBeneficio = 0; idexDoBeneficio < beneficios.length; idexDoBeneficio++) {
@@ -31,7 +30,7 @@ export async function getInformaçoesSecudariaDosBeneficiosSuperDossie(beneficio
                 if(!especieExist){
                     continue
                 }else{
-                        especieDifenteDoBeneficio = especieExist == (beneficios[0].beneficio).split("-")[0].trim();
+                        especieDifenteDoBeneficio = especieExist == (beneficios[idexDoBeneficio].beneficio).split("-")[0].trim();
                     if(!especieDifenteDoBeneficio){
                         continue
                     }

@@ -119,13 +119,13 @@ export class GetInformationFromSapienForSamirUseCase {
                         });
 
 
-                        if(objectDosPrev.numeracaoSequencial == undefined && objectDosPrev2.numeracaoSequencial == undefined){
+                        if(objectDosPrev == undefined && objectDosPrev2 == undefined){
                             (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ENCONTRADO", tarefaId }));
                             continue
-                        }else if(objectDosPrev2.numeracaoSequencial != undefined && objectDosPrev.numeracaoSequencial == undefined){
+                        }else if(objectDosPrev2 != undefined && objectDosPrev == undefined){
                             objectDosPrev = objectDosPrev2;
                             superDosprevExist = true;
-                        }else if(objectDosPrev.numeracaoSequencial != undefined &&  objectDosPrev2.numeracaoSequencial != undefined){
+                        }else if(objectDosPrev != undefined &&  objectDosPrev2 != undefined){
                             if(objectDosPrev.numeracaoSequencial < objectDosPrev2.numeracaoSequencial){
                                 objectDosPrev = objectDosPrev2;
                                 superDosprevExist = true;
@@ -214,8 +214,10 @@ export class GetInformationFromSapienForSamirUseCase {
                 
                 if(superDosprevExist){
                     try{
-                        const teste =  await superDossie.handle(parginaDosPrevFormatada);
-                        console.log("TETETETETETEET " + JSON.stringify(teste))
+                        const superDossiePrevidenciario: IInformationsForCalculeDTO =  await superDossie.handle(parginaDosPrevFormatada, arrayDeDocumentos, tarefas[i].pasta.NUP, tarefas[i].pasta.chaveAcesso, tarefas[i].id, parseInt(tarefaId));
+                        response.push(superDossiePrevidenciario);
+                        await updateEtiquetaUseCase.execute({ cookie, etiqueta: `LIDO BOT - ${etiquetaParaConcatenar}`, tarefaId })
+                        continue
 
                     }catch(e){
                         if(e instanceof MinhaErroPersonalizado && e.message == "DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE"){
@@ -226,10 +228,14 @@ export class GetInformationFromSapienForSamirUseCase {
                             (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV SEM BENEFICIO VALIDOS - ${etiquetaParaConcatenar}`, tarefaId }))
                             continue
                         }
+                        if(e instanceof MinhaErroPersonalizado && e.message == "FALHA NA LEITURA DOS BENEFICIOS"){
+                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `FALHA NA LEITURA DOS BENEFICIOS - ${etiquetaParaConcatenar}`, tarefaId }))
+                            continue
+                        }
                     }
                 }
 
-                /* const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]"
+                const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]"
                 const informacaoDeCabeçalho = getXPathText(parginaDosPrevFormatada, xpathInformacaoDeCabeçalho);
                 console.log("informacaoDeCabeçalho", informacaoDeCabeçalho)
                 const informacaoDeCabeçalhoNaoExiste = !informacaoDeCabeçalho;
@@ -243,7 +249,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue
-                } */
+                }
 
                 var beneficios = await getInformaçoesIniciasDosBeneficios(parginaDosPrevFormatada)
                 if (beneficios.length <= 0) {
@@ -266,6 +272,7 @@ export class GetInformationFromSapienForSamirUseCase {
                 const cpf: string = getXPathText(parginaDosPrevFormatada, xpathCpf);
 
                 const urlProcesso = `https://sapiens.agu.gov.br/visualizador?nup=${tarefas[i].pasta.NUP}&chave=${tarefas[i].pasta.chaveAcesso}&tarefaId=${tarefas[i].id}`
+               
                 // console.log("urlProcesso", urlProcesso, "cpf", cpf, "nome", nome, "dataAjuizamento", dataAjuizamento, "numeroDoProcesso", numeroDoProcesso);
                 const citacao = coletarCitacao(arrayDeDocumentos)
                 let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, parseInt(tarefaId))

@@ -6,7 +6,8 @@ import { getXPathText } from "../../../helps/GetTextoPorXPATH";
 export async function getInformaçoesSecudariaDosBeneficios(beneficios: IBeneficiosDTO[], paginaHTML_DOSPREV_Formatada: any): Promise<IBeneficiosDTO[]> {
     const numeroMaximoParaProcurarAPosiçaoDasDivDaTabelaDeBeneficio = 6;
     const numeroInicialParaProcurarAPosiçaoDasDivDaTabelaDeBeneficio = 5;
-
+ 
+    
     const numeroMaxioParaProcurarATabelaDoBeneeficio = 50;
     const numeroInicialParaProcurarATabelaDoBeneeficio = 1;
     for (let idexDoBeneficio = 0; idexDoBeneficio < beneficios.length; idexDoBeneficio++) {

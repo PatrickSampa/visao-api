@@ -211,7 +211,7 @@ export class GetInformationFromSapienForSamirUseCase {
                 const parginaDosPrev = await getDocumentoUseCase.execute({ cookie, idDocument: idDosprevParaPesquisa });
 
                 const parginaDosPrevFormatada = new JSDOM(parginaDosPrev);
-                
+                console.log("TAREFAAAAAAAAA " + tarefaId)
                 if(superDosprevExist){
                     try{
                         const superDossiePrevidenciario: IInformationsForCalculeDTO =  await superDossie.handle(parginaDosPrevFormatada, arrayDeDocumentos, tarefas[i].pasta.NUP, tarefas[i].pasta.chaveAcesso, tarefas[i].id, parseInt(tarefaId));

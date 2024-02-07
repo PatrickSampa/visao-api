@@ -55,7 +55,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     arrayDeDocumentos = (await getArvoreDocumentoUseCase.execute(objectGetArvoreDocumento)).reverse();
                 } catch (error) {
                     console.log(error);
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA GERAÇAO", tarefaId }));
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV COM FALHA NA GERAÇAO - ${etiquetaParaConcatenar}`, tarefaId }));
                     continue
                 }
 
@@ -87,7 +87,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     });
                     
                     if(objectDosPrev == undefined && objectDosPrev2 == undefined){
-                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ENCONTRADO", tarefaId }));
+                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV NÃO ENCONTRADO - ${etiquetaParaConcatenar}`, tarefaId }));
                         continue
                     }else if(objectDosPrev2 != undefined && objectDosPrev == undefined){
                         objectDosPrev = objectDosPrev2;
@@ -120,7 +120,7 @@ export class GetInformationFromSapienForSamirUseCase {
 
 
                         if(objectDosPrev == undefined && objectDosPrev2 == undefined){
-                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV NÃO ENCONTRADO", tarefaId }));
+                            (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV NÃO ENCONTRADO - ${etiquetaParaConcatenar}`, tarefaId }));
                             continue
                         }else if(objectDosPrev2 != undefined && objectDosPrev == undefined){
                             objectDosPrev = objectDosPrev2;
@@ -135,7 +135,7 @@ export class GetInformationFromSapienForSamirUseCase {
 
                     } catch (error) {
                         console.log(error);
-                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: "DOSPREV COM FALHA NA GERAÇAO", tarefaId }));
+                        (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV COM FALHA NA GERAÇAO - ${etiquetaParaConcatenar}`, tarefaId }));
                         continue
                     }
                 }
@@ -191,7 +191,7 @@ export class GetInformationFromSapienForSamirUseCase {
               
                 const cpfCapa = buscarTableCpf(novaCapa);
                 if(!cpfCapa){
-                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `CPF NÃO ENCONTRADO`, tarefaId }))
+                    (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `CPF NÃO ENCONTRADO - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue;
                 }
 

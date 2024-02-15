@@ -25,6 +25,9 @@ import { buscarTableCpf } from './helps/procurarTableCpf';
 import { superDossie } from './DossieSuperSapiens';
 import { MinhaErroPersonalizado } from './helps/ErrorMensage';
 import { json } from 'express';
+import { coletarDateInCertidao } from './helps/coletarCitacaoInCertidao';
+import { verificarAbreviacaoCapa } from './helps/verificarAbreviacaoCapa';
+import { coletarCitacaoTjac } from './GetCitacao/coletarCitacaoTjac';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -235,7 +238,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     }
                 }
 
-                const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]"
+               /*  const xpathInformacaoDeCabeçalho = "/html/body/div/p[2]/b[1]"
                 const informacaoDeCabeçalho = getXPathText(parginaDosPrevFormatada, xpathInformacaoDeCabeçalho);
                 console.log("informacaoDeCabeçalho", informacaoDeCabeçalho)
                 const informacaoDeCabeçalhoNaoExiste = !informacaoDeCabeçalho;
@@ -249,7 +252,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     console.log("DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE");
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue
-                }
+                } */
 
                 var beneficios = await getInformaçoesIniciasDosBeneficios(parginaDosPrevFormatada)
                 if (beneficios.length <= 0) {
@@ -274,7 +277,13 @@ export class GetInformationFromSapienForSamirUseCase {
                 const urlProcesso = `https://sapiens.agu.gov.br/visualizador?nup=${tarefas[i].pasta.NUP}&chave=${tarefas[i].pasta.chaveAcesso}&tarefaId=${tarefas[i].id}`
                
                 // console.log("urlProcesso", urlProcesso, "cpf", cpf, "nome", nome, "dataAjuizamento", dataAjuizamento, "numeroDoProcesso", numeroDoProcesso);
-                const citacao = coletarCitacao(arrayDeDocumentos)
+                let citacao = coletarCitacao(arrayDeDocumentos)
+                if (!citacao) coletarDateInCertidao(arrayDeDocumentos);
+                if(!citacao){
+                    const searchTypeCape = await verificarAbreviacaoCapa(novaCapa)
+                    await coletarCitacaoTjac(arrayDeDocumentos, cookie)
+                    console.log('buscando abre ' + searchTypeCape)
+                }
                 let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, parseInt(tarefaId))
                 //console.log(informationsForCalculeDTO)
                 // { beneficio: "teste", dibAnterior: "teste", beneficioAcumuladoBoolean: false, dibInicial: "teste", dip: "teste", id: parseInt(tarefaId), nb: "teste", rmi: "teste", tipo: "teste", numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao },

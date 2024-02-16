@@ -281,8 +281,8 @@ export class GetInformationFromSapienForSamirUseCase {
                 if (!citacao) coletarDateInCertidao(arrayDeDocumentos);
                 if(!citacao){
                     const searchTypeCape = await verificarAbreviacaoCapa(novaCapa)
-                    await coletarCitacaoTjac(arrayDeDocumentos, cookie)
-                    console.log('buscando abre ' + searchTypeCape)
+                    citacao = await coletarCitacaoTjac(arrayDeDocumentos, cookie)
+                    console.log('buscando abre ' + citacao)
                 }
                 let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, parseInt(tarefaId))
                 //console.log(informationsForCalculeDTO)

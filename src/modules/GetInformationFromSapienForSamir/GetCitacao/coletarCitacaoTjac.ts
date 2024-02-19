@@ -5,8 +5,13 @@ export async function coletarCitacaoTjac(arrayDeDocument: any, cookie: string) {
 
     try{
 
-        var paginaProcessoJudicial: any = arrayDeDocument.filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "PROCJUDIC");
-        let idProcessoJudicial = paginaProcessoJudicial[0].documentoJuntado.componentesDigitais[0].id
+        var paginaProcessoJudicial: any = arrayDeDocument.reverse().filter(Documento => Documento.documentoJuntado.tipoDocumento.sigla == "PROCJUDIC");
+        let contador = 0
+        for await (let judicial of paginaProcessoJudicial){
+            
+        let idProcessoJudicial = paginaProcessoJudicial[contador].documentoJuntado.componentesDigitais[0].id
+        
+        contador = contador + 1
         const urlProcesso = (`https://sapiens.agu.gov.br/documento/${idProcessoJudicial}`)
         await downloadPDFWithCookies(urlProcesso, cookie)
         const mesesDoAno = [
@@ -23,9 +28,11 @@ export async function coletarCitacaoTjac(arrayDeDocument: any, cookie: string) {
             "novembro",
             "dezembro"
         ];
-        const pdfString: string = (await readPDF('src/modules/GetPdfSapiens/pdfIsUser.pdf'))
-        const pdfStringWithSplit = pdfString.split("MANDADO DE CITAÇÃO E DE INTIMAÇÃO")[1]
-        //console.log(pdfStringWithSplit)
+        const pdfString: string = (await readPDF('src/modules/PDFS/pdfIsUser.pdf'))
+        const pdfStringWithSplit = pdfString.split("MANDADO DE CITAÇÃO")[1]
+        
+        
+        if(pdfString.split("MANDADO DE CITAÇÃO").length <= 1) continue
         const gerexMeses = new RegExp(mesesDoAno.join("|"), "gi")
         const MonthSeacrch = pdfStringWithSplit.match(gerexMeses)[0]
         const MounthNumber = (mesesDoAno.indexOf(MonthSeacrch) + 1)
@@ -43,7 +50,13 @@ export async function coletarCitacaoTjac(arrayDeDocument: any, cookie: string) {
         return `${dia}/${mes < 10 ? '0' + mes : mes}/${ano}`
 
 
+        }
+    return null    
+        
+
+
     }catch(e){
+        console.log(e)
         console.log("ERRO NO COLETACITACAOTJAC")
         return null
     }

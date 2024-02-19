@@ -28,6 +28,7 @@ import { json } from 'express';
 import { coletarDateInCertidao } from './helps/coletarCitacaoInCertidao';
 import { verificarAbreviacaoCapa } from './helps/verificarAbreviacaoCapa';
 import { coletarCitacaoTjac } from './GetCitacao/coletarCitacaoTjac';
+import { deletePDF } from '../GetPdfSapiens/deletePdf';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -282,7 +283,9 @@ export class GetInformationFromSapienForSamirUseCase {
                 if(!citacao){
                     const searchTypeCape = await verificarAbreviacaoCapa(novaCapa)
                     citacao = await coletarCitacaoTjac(arrayDeDocumentos, cookie)
+                    
                     console.log('buscando abre ' + citacao)
+                    deletePDF('patrick')
                 }
                 let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, parseInt(tarefaId))
                 //console.log(informationsForCalculeDTO)

@@ -29,6 +29,7 @@ import { coletarDateInCertidao } from './helps/coletarCitacaoInCertidao';
 import { verificarAbreviacaoCapa } from './helps/verificarAbreviacaoCapa';
 import { coletarCitacaoTjac } from './GetCitacao/coletarCitacaoTjac';
 import { deletePDF } from '../GetPdfSapiens/deletePdf';
+import { coletarCitacaoTjam } from './GetCitacao/coletarCitacaoTjam';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -282,8 +283,11 @@ export class GetInformationFromSapienForSamirUseCase {
                 if (!citacao) coletarDateInCertidao(arrayDeDocumentos);
                 if(!citacao){
                     const searchTypeCape = await verificarAbreviacaoCapa(novaCapa)
-                    citacao = await coletarCitacaoTjac(arrayDeDocumentos, cookie)
-                    
+                    if(searchTypeCape == "TJAC"){
+                        citacao = await coletarCitacaoTjac(arrayDeDocumentos, cookie)
+                    }else if(searchTypeCape == "TJAM"){
+                        citacao = await coletarCitacaoTjam(arrayDeDocumentos, cookie)
+                    }
                     console.log('buscando abre ' + citacao)
                     deletePDF('patrick')
                 }

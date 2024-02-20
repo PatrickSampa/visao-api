@@ -1,15 +1,20 @@
 import { IInformationsForCalculeDTO } from "../../../DTO/InformationsForCalcule";
 import { getXPathText } from "../../../helps/GetTextoPorXPATH";
 import { VerificaçaoDaQuantidadeDeDiasParaInspirarOSuperDossie } from "../../../helps/VerificaçaoDaQuantidadeDeDiasParaInspirarOSuperDossie";
+import { deletePDF } from "../../GetPdfSapiens/deletePdf";
+import { coletarCitacaoTjac } from "../GetCitacao/coletarCitacaoTjac";
+import { coletarCitacaoTjam } from "../GetCitacao/coletarCitacaoTjam";
 import { MinhaErroPersonalizado } from "../helps/ErrorMensage";
 import { coletarCitacao } from "../helps/coletarCitacao";
+import { coletarDateInCertidao } from "../helps/coletarCitacaoInCertidao";
 import { fazerInformationsForCalculeDTO } from "../helps/contruirInformationsForCalcule";
 import { getInformaçoesIniciasDosBeneficiosSuperDosprev } from "../helps/getInformaçoesIniciasDosBeneficiosSuperDosprev";
 import { getInformaçoesSecudariaDosBeneficiosSuperDossie } from "../helps/getInformaçoesSecudariaDosBeneficiosSuperDossie";
 import { isValidInformationsForCalculeDTO } from "../helps/validadorDeInformationsForCalculeDTO";
+import { verificarAbreviacaoCapa } from "../helps/verificarAbreviacaoCapa";
 
 export class SuperDossie {
-    async handle(paginaDosprev: any, arrayDeDocumentos: any, nup,chaveAcesso, id, tarefaId): Promise<IInformationsForCalculeDTO> {
+    async handle(paginaDosprev: any, arrayDeDocumentos: any, nup,chaveAcesso, id, tarefaId, novaCapa, cookie, userIdControlerPdf): Promise<IInformationsForCalculeDTO> {
         const xpaththInformacaoCabecalho = "/html/body/div/div[3]/p/strong/text()"
 
         const informacaoDeCabeçalho = getXPathText(paginaDosprev, xpaththInformacaoCabecalho);
@@ -42,7 +47,18 @@ export class SuperDossie {
 
         const urlProcesso = `https://sapiens.agu.gov.br/visualizador?nup=${nup}&chave=${chaveAcesso}&tarefaId=${id}`
         console.log(tarefaId)
-        const citacao = coletarCitacao(arrayDeDocumentos);
+        let citacao = coletarCitacao(arrayDeDocumentos);
+        if (!citacao) coletarDateInCertidao(arrayDeDocumentos);
+                if(!citacao){
+                    const searchTypeCape = await verificarAbreviacaoCapa(novaCapa)
+                    if(searchTypeCape == "TJAC"){
+                        citacao = await coletarCitacaoTjac(arrayDeDocumentos, cookie, userIdControlerPdf)
+                    }else if(searchTypeCape == "TJAM"){
+                        citacao = await coletarCitacaoTjam(arrayDeDocumentos, cookie, userIdControlerPdf)
+                    }
+                    console.log('buscando abre ' + citacao)
+                    deletePDF('patrick')
+                }
 
         let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, tarefaId)
 

@@ -30,6 +30,9 @@ import { verificarAbreviacaoCapa } from './helps/verificarAbreviacaoCapa';
 import { coletarCitacaoTjac } from './GetCitacao/coletarCitacaoTjac';
 import { deletePDF } from '../GetPdfSapiens/deletePdf';
 import { coletarCitacaoTjam } from './GetCitacao/coletarCitacaoTjam';
+import jwt from 'jsonwebtoken'
+import { id } from 'date-fns/locale';
+import { verificationPdfExist } from './helps/verificationPdfExist';
 
 
 export class GetInformationFromSapienForSamirUseCase {
@@ -39,7 +42,8 @@ export class GetInformationFromSapienForSamirUseCase {
         const cookie = await loginUseCase.execute(data.login);
         console.log("Login " + cookie)
         const usuario = (await getUsuarioUseCase.execute(cookie));
-        
+        const userIdControlerPdf = (jwt.decode(data.usuario_id).id)
+        console.log(userIdControlerPdf)
         const usuario_id = `${usuario[0].id}`;
         let novaCapa: any = false;
         var objectDosPrev
@@ -219,7 +223,7 @@ export class GetInformationFromSapienForSamirUseCase {
                 console.log("TAREFAAAAAAAAA " + tarefaId)
                 if(superDosprevExist){
                     try{
-                        const superDossiePrevidenciario: IInformationsForCalculeDTO =  await superDossie.handle(parginaDosPrevFormatada, arrayDeDocumentos, tarefas[i].pasta.NUP, tarefas[i].pasta.chaveAcesso, tarefas[i].id, parseInt(tarefaId));
+                        const superDossiePrevidenciario: IInformationsForCalculeDTO =  await superDossie.handle(parginaDosPrevFormatada, arrayDeDocumentos, tarefas[i].pasta.NUP, tarefas[i].pasta.chaveAcesso, tarefas[i].id, parseInt(tarefaId), novaCapa, cookie, userIdControlerPdf);
                         response.push(superDossiePrevidenciario);
                         await updateEtiquetaUseCase.execute({ cookie, etiqueta: `LIDO BOT - ${etiquetaParaConcatenar}`, tarefaId })
                         continue
@@ -281,15 +285,16 @@ export class GetInformationFromSapienForSamirUseCase {
                 // console.log("urlProcesso", urlProcesso, "cpf", cpf, "nome", nome, "dataAjuizamento", dataAjuizamento, "numeroDoProcesso", numeroDoProcesso);
                 let citacao = coletarCitacao(arrayDeDocumentos)
                 if (!citacao) coletarDateInCertidao(arrayDeDocumentos);
+                console.log(data)
                 if(!citacao){
                     const searchTypeCape = await verificarAbreviacaoCapa(novaCapa)
                     if(searchTypeCape == "TJAC"){
-                        citacao = await coletarCitacaoTjac(arrayDeDocumentos, cookie)
+                        citacao = await coletarCitacaoTjac(arrayDeDocumentos, cookie, userIdControlerPdf)
                     }else if(searchTypeCape == "TJAM"){
-                        citacao = await coletarCitacaoTjam(arrayDeDocumentos, cookie)
+                        citacao = await coletarCitacaoTjam(arrayDeDocumentos, cookie, userIdControlerPdf)
                     }
                     console.log('buscando abre ' + citacao)
-                    deletePDF('patrick')
+                    deletePDF(userIdControlerPdf)
                 }
                 let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, parseInt(tarefaId))
                 //console.log(informationsForCalculeDTO)
@@ -306,10 +311,13 @@ export class GetInformationFromSapienForSamirUseCase {
 
 
             }
+           
+            if( await verificationPdfExist(userIdControlerPdf)) deletePDF(userIdControlerPdf)
             return await response
         } catch (error) {
             console.log(error);
             console.log(response.length)
+            if(await verificationPdfExist(userIdControlerPdf)) deletePDF(userIdControlerPdf)
             if (response.length > 0) {
                 return response
             }

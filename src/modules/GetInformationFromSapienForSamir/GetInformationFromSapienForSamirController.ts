@@ -6,6 +6,7 @@ export class GetInformationFromSapienForSamirController {
     constructor(private getInformationFromSapienForSamirUseCase: GetInformationFromSapienForSamirUseCase,) { }
     async handle(request: Request, response: Response): Promise<Response> {
         const data: IGetInformationsFromSapiensDTO = request.body;
+        console.log(request.body)
         try {
             const result = await this.getInformationFromSapienForSamirUseCase.execute(data);
             response.status(200).json(result);

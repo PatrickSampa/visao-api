@@ -1,7 +1,7 @@
 import { downloadPDFWithCookies } from "../../GetPdfSapiens/downloadPDFWithCookies";
 import { readPDF } from "../../GetPdfSapiens/readPDF";
 
-export async function coletarCitacaoTjam(arrayDeDocument: any, cookie: string) {
+export async function coletarCitacaoTjam(arrayDeDocument: any, cookie: string, id: string) {
 
     try{
 
@@ -14,7 +14,7 @@ export async function coletarCitacaoTjam(arrayDeDocument: any, cookie: string) {
 
         contador = contador + 1
         const urlProcesso = (`https://sapiens.agu.gov.br/documento/${idProcessoJudicial}`)
-        await downloadPDFWithCookies(urlProcesso, cookie)
+        await downloadPDFWithCookies(urlProcesso, cookie, id)
         const mesesDoAno = [
             "janeiro",
             "fevereiro",
@@ -29,7 +29,7 @@ export async function coletarCitacaoTjam(arrayDeDocument: any, cookie: string) {
             "novembro",
             "dezembro"
         ];
-        const pdfString: string = (await readPDF('src/modules/PDFS/pdfIsUser.pdf'))
+        const pdfString: string = (await readPDF(id))
         const pdfStringWithSplit = pdfString.split("EXPEDIÇÃO DE CITAÇÃO ONLINE")[1]
 
         if(pdfString.split("EXPEDIÇÃO DE CITAÇÃO ONLINE").length > 1) {

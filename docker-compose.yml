@@ -1,32 +1,17 @@
 version: '3'
 services:
   app:
-    build: .
+    image: patricksampa/visao-api:1.0.0
     restart: always
     hostname: visao-{{.Task.Slot}}
     networks:
       - visao
     environment:
-      CMD_Python: "/bin/bash -c venv/bin/activate && python3"
-      IS_DOCKER: "true"
-      PORT_DOCKER: 3000
-      API_PORT: 3001
+      CMD_Python: python3
+      PORT_DOCKER: 3002
+      API_PORT: 3002
     ports:
-      - 3001-3005:3001
-    deploy:
-      replicas: 5
-      placement:
-        constraints:
-          - node.role == worker
-  nginx:
-    restart: always
-    image: nginx
-    networks:
-      - visao
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - "3002:3002"  
 networks:
   visao:
     driver: bridge

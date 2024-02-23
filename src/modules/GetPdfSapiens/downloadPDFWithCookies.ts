@@ -5,7 +5,7 @@ import fs from 'fs';
 export async function downloadPDFWithCookies(url: string, cookies: string): Promise<void> {
     const response = await axios.get(url, {
       headers: {
-        Cookie: cookies,
+        Cookie: cookies.replace("\n", ""),
         'Content-Type': 'application/pdf',
       },
       responseType: 'arraybuffer',

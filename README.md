@@ -12,3 +12,4 @@
   * * Obs: so precisar fazer o build uma vez do container sendo necessário fazer ele de novo caso faça modificação no código
   * * * O `--build` é para fazer o build da imagem do projeto assim para subir os container sem o build basta executar o comando `docker-compose -f docker-compose.dev.yml up -d`
     * * * O `-d` é para não travar o terminal, então caso queira subir os container com terminal travado e exibindo os logs do sistema basta executar o comando `docker-compose -f docker-compose.dev.yml up`
+    

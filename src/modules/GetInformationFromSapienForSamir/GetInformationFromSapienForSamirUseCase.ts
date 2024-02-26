@@ -293,6 +293,9 @@ export class GetInformationFromSapienForSamirUseCase {
                     }else if(searchTypeCape == "TJAM"){
                         citacao = await coletarCitacaoTjam(arrayDeDocumentos, cookie, userIdControlerPdf)
                     }
+                    if(!citacao){
+                        citacao = ""
+                    }
                     console.log('buscando abre ' + citacao)
                     deletePDF(userIdControlerPdf)
                 }

@@ -1,4 +1,6 @@
 export async function coletarDateInCertidao(arrayDeDocument: any): Promise<string[] | null | undefined> {
+    
+   try{
     let numeroCertidao;
     for (let i = arrayDeDocument.length - 1; i >= 0; i--) {
       const movimento = arrayDeDocument[i].movimento.split('.');
@@ -12,6 +14,7 @@ export async function coletarDateInCertidao(arrayDeDocument: any): Promise<strin
         break;
       }
     }
+    console.log(arrayDeDocument[numeroCertidao + 1])
     if (
       !numeroCertidao ||
       arrayDeDocument[numeroCertidao + 1].documento.tipoDocumento.descricao !=
@@ -26,4 +29,9 @@ export async function coletarDateInCertidao(arrayDeDocument: any): Promise<strin
       return arrayDeDocument[numeroCertidao + 1].documento.dataHoraProducao
         .split(' ')[0]
         .split('-');
+   }catch(e){
+    console.log(e + "erro na citacao")
+    return null
+   } 
+    
   }

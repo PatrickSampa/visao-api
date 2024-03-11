@@ -17,13 +17,16 @@ export async function LoginSapiens(login: ILoginDTO): Promise<string> {
     let dataPython;
     return new Promise(function (resolve, reject) {
         childPython.stdout.on("data", (data) => {
+            console.log((`${data}`) + "aquiu")
             dataPython = (`${data}`).replace("\r\n", "");
         })
         childPython.stderr.on("data", (data) => {
-            console.log(`${data} login`);
+            console.log("data")
+            //console.log(`${data} login`);
             reject(`${data}`)
         })
         childPython.on("close", (code) => {
+            console.log(code)
             resolve(dataPython);
         })
     });

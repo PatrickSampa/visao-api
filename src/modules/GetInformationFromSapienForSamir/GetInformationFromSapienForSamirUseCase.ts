@@ -259,7 +259,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     (await updateEtiquetaUseCase.execute({ cookie, etiqueta: `DOSPREV FORA DO PRAZO DO PRAZO DE VALIDADE - ${etiquetaParaConcatenar}`, tarefaId }))
                     continue
                 } */
-
+                console.log("aquiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
                 var beneficios = await getInformaçoesIniciasDosBeneficios(parginaDosPrevFormatada)
                 if (beneficios.length <= 0) {
                     console.log("DOSPREV SEM BENEFICIO VALIDOS");
@@ -286,6 +286,7 @@ export class GetInformationFromSapienForSamirUseCase {
                 let citacao = coletarCitacao(arrayDeDocumentos)
                 if (!citacao) coletarDateInCertidao(arrayDeDocumentos);
                 console.log(data)
+                console.log(citacao)
                 if(!citacao){
                     const searchTypeCape = await verificarAbreviacaoCapa(novaCapa)
                     if(searchTypeCape == "TJAC"){
@@ -296,7 +297,7 @@ export class GetInformationFromSapienForSamirUseCase {
                     if(!citacao){
                         citacao = ""
                     }
-                    console.log('buscando abre ' + citacao)
+                    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ' + citacao)
                     deletePDF(userIdControlerPdf)
                 }
                 let informationsForCalculeDTO: IInformationsForCalculeDTO = await fazerInformationsForCalculeDTO(beneficios, numeroDoProcesso, dataAjuizamento, nome, cpf, urlProcesso, citacao, parseInt(tarefaId))
